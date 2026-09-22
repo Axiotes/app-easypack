@@ -1,0 +1,32 @@
+<main class="login-page">
+  <section class="intro" aria-label="Apresentação do ReleaseTrack">
+    <div class="intro__topbar"><app-brand /><span class="environment"><i></i> Produção</span></div>
+    <div class="intro__content">
+      <p class="eyebrow"><span></span> GOVERNANÇA DE RELEASES</p>
+      <h1>Implantações seguras,<br /><em>controle total.</em></h1>
+      <p class="intro__description">Centralize a gestão de pacotes e correções dos seus clientes com rastreabilidade em cada etapa.</p>
+      <div class="guardrails">
+        <div class="guardrail"><span class="guardrail__icon guardrail__icon--blue">⌘</span><div><strong>Fluxo controlado</strong><small>Aprovações antes da aplicação</small></div></div>
+        <div class="guardrail"><span class="guardrail__icon guardrail__icon--green">✓</span><div><strong>Permissões por perfil</strong><small>Acesso conforme setor e produto</small></div></div>
+        <div class="guardrail"><span class="guardrail__icon guardrail__icon--purple">◌</span><div><strong>Rastreabilidade completa</strong><small>Histórico de cada alteração</small></div></div>
+      </div>
+    </div>
+    <footer>© 2026 ReleaseTrack <span></span> Plataforma de gestão de releases</footer>
+  </section>
+  <section class="access" aria-labelledby="login-title">
+    <div class="access__content">
+      <div class="mobile-brand"><app-brand /></div>
+      <div class="access__heading"><p class="eyebrow">ACESSO RESTRITO</p><h2 id="login-title">Bem-vindo de volta</h2><p>Entre com suas credenciais para continuar.</p></div>
+      <form (ngSubmit)="submit()" #loginForm="ngForm" novalidate>
+        <label for="email">E-mail corporativo</label>
+        <div class="field" [class.field--invalid]="submitted() && !email()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 7l8 6 8-6" /></svg><input id="email" name="email" type="email" autocomplete="email" placeholder="nome@mv.com.br" [(ngModel)]="email" required /></div>
+        @if (submitted() && !email()) { <p class="validation">Informe seu e-mail corporativo.</p> }
+        <div class="label-row"><label for="password">Senha</label><a href="/login">Esqueci minha senha</a></div>
+        <div class="field" [class.field--invalid]="submitted() && !password()"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></svg><input id="password" name="password" [type]="showPassword() ? 'text' : 'password'" autocomplete="current-password" placeholder="••••••••" [(ngModel)]="password" required /><button type="button" class="visibility" (click)="showPassword.set(!showPassword())" [attr.aria-label]="showPassword() ? 'Ocultar senha' : 'Mostrar senha'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" /><circle cx="12" cy="12" r="2.6" /></svg></button></div>
+        @if (submitted() && !password()) { <p class="validation">Informe sua senha.</p> }
+        <button class="submit" type="submit">Entrar na plataforma <span>→</span></button>
+      </form>
+      <p class="support">Precisa de ajuda? <a href="mailto:suporte@mv.com.br">Fale com o suporte</a></p>
+    </div>
+  </section>
+</main>
