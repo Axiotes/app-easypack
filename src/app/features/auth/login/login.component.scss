@@ -356,3 +356,17 @@ form {
         margin-bottom: 2rem; 
     } 
 }
+
+.feedback {
+    border: 1px solid;
+    border-radius: 5px;
+    font-size: .75rem;
+    line-height: 1.4;
+    margin: 1rem 0;
+    padding: .65rem .75rem;
+}
+
+.feedback--success { background: rgba(20, 113, 81, .15); border-color: #267d63; color: #56dcb0; }
+.feedback--error { background: rgba(142, 44, 59, .15); border-color: #a94e5b; color: #f08b94; }
+.submit:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-1px); }
+.submit:disabled { cursor: wait; opacity: .72; }
