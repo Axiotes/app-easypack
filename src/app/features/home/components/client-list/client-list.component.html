@@ -1,0 +1,13 @@
+<aside class="client-list">
+  <div class="client-list__title">CLIENTES &amp; HOSPITAIS</div>
+  <label class="client-search"><span>⌕</span><input [(ngModel)]="search" placeholder="Buscar cliente..." /></label>
+  <div class="clients">
+    @for (client of filteredClients; track client.id) {
+      <button class="client" [class.client--selected]="client.id === selectedClientId" (click)="selectClient.emit(client)">
+        <span class="client__count">{{ packageCount[client.id] || 0 }}</span>
+        <strong>{{ client.nm_cliente }}</strong><small>⌖ {{ client.cidade }}, {{ client.uf }} · {{ client.setor_atendimento }}</small>
+        <span [class]="environmentClass(client.status_ambiente)"><i></i>{{ client.status_ambiente }}</span>
+      </button>
+    } @empty { <p class="empty">Nenhum cliente encontrado.</p> }
+  </div>
+</aside>
