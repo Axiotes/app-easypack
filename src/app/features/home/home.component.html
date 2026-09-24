@@ -31,13 +31,13 @@
       </section>
       <section class="metrics" style="grid-template-columns: repeat(3, 1fr)">
         <article>
-          <small>Total de pacotes</small><strong>{{ totalPackages }}</strong>
+          <small>Total de pacotes</small><strong>{{ packageCounts().total_pacotes }}</strong>
         </article>
         <article class="metric--applied">
-          <small>Aplicados</small><strong>{{ appliedPackages }}</strong>
+          <small>Aplicados</small><strong>{{ packageCounts().total_aplicados }}</strong>
         </article>
         <article class="metric--pending">
-          <small>Pendentes</small><strong>{{ pendingPackages }}</strong>
+          <small>Pendentes</small><strong>{{ packageCounts().total_pendentes }}</strong>
         </article>
       </section>
       <section class="filter-panel" aria-label="Filtros de pacotes">
@@ -46,56 +46,58 @@
         </div>
         <div class="filters">
           <label class="filter filter--wide"
-            ><span>Pesquisar pacote ou ticket</span
-            ><input [(ngModel)]="filters.search" placeholder="Ex.: PEP-1042" /></label
+            ><span>Nome do pacote</span
+            ><input [(ngModel)]="filters.nm_pacote" (ngModelChange)="updatePackageFilters()" placeholder="Ex.: pep-core" /></label
+          ><label class="filter"
+            ><span>Ticket</span><input [(ngModel)]="filters.ticket" (ngModelChange)="updatePackageFilters()" placeholder="Ex.: PEP-1042" /></label
           ><label class="filter"
             ><span>Produto</span
-            ><select [(ngModel)]="filters.produto">
-              <option value="">Todos</option>
-              <option>PEP</option>
-              <option>SOUL</option>
-              <option>SACR</option>
-              <option>PAGU</option>
+            ><select [(ngModel)]="filters.id_produto" (ngModelChange)="updatePackageFilters()">
+              <option [ngValue]="''">Todos</option>
+              <option [ngValue]="1">PEP</option>
+              <option [ngValue]="2">SOUL</option>
+              <option [ngValue]="3">SACR</option>
+              <option [ngValue]="4">PAGU</option>
             </select></label
           ><label class="filter"
-            ><span>Versão</span><input [(ngModel)]="filters.versao" placeholder="Ex.: 3.4" /></label
+            ><span>Versão</span><input [(ngModel)]="filters.versao_correcao" (ngModelChange)="updatePackageFilters()" placeholder="Ex.: 3.4" /></label
           ><label class="filter"
             ><span>Aprovação GP</span
-            ><select [(ngModel)]="filters.sn_aprovado_gerente">
+            ><select [(ngModel)]="filters.sn_aprovado_gerente" (ngModelChange)="updatePackageFilters()">
               <option value="">Todos</option>
               <option value="S">Sim</option>
               <option value="N">Não</option>
             </select></label
           ><label class="filter"
-            ><span>Aprovação merge</span
-            ><select [(ngModel)]="filters.sn_aprovado_code_review">
+            ><span>Aplicado</span
+            ><select [(ngModel)]="filters.sn_aplicado" (ngModelChange)="updatePackageFilters()">
               <option value="">Todos</option>
               <option value="S">Sim</option>
               <option value="N">Não</option>
             </select></label
           ><label class="filter"
             ><span>Mergeado</span
-            ><select [(ngModel)]="filters.sn_mergeado">
+            ><select [(ngModel)]="filters.sn_mergeado" (ngModelChange)="updatePackageFilters()">
               <option value="">Todos</option>
               <option value="S">Sim</option>
               <option value="N">Não</option>
             </select></label
           ><label class="filter"
             ><span>Ticket bug</span
-            ><input [(ngModel)]="filters.ticket_bug" placeholder="Ex.: PEP-1091" /></label
+            ><input [(ngModel)]="filters.ticket_bug" (ngModelChange)="updatePackageFilters()" placeholder="Ex.: PEP-1091" /></label
           ><label class="filter"
             ><span>Setor</span
-            ><select [(ngModel)]="filters.setor">
-              <option value="">Todos</option>
-              <option>ST</option>
-              <option>FB</option>
+            ><select [(ngModel)]="filters.id_setor" (ngModelChange)="updatePackageFilters()">
+              <option [ngValue]="''">Todos</option>
+              <option [ngValue]="1">ST</option>
+              <option [ngValue]="2">FB</option>
             </select></label
           >
         </div>
       </section>
       <div class="table-heading">
         <span>Pacotes encontrados</span
-        ><b>{{ totalPackages }} pacote{{ totalPackages === 1 ? '' : 's' }}</b>
+        ><b>{{ packageCounts().total_pacotes }} pacote{{ packageCounts().total_pacotes === 1 ? '' : 's' }}</b>
       </div>
       <app-package-table [packages]="selectedPackages" />
     </main>

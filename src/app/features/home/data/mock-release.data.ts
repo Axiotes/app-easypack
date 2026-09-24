@@ -1,13 +1,13 @@
 import { Client, ReleasePackage } from '../models/release.models';
 
 export const mockClients: Client[] = [
-  { id: 1, nm_cliente: 'Grupo Vitalis', id_setor_atendimento: 1, setor_atendimento: 'ST', status_ambiente: 'PRD', estado: 'SP', id_usuario: 1 },
-  { id: 2, nm_cliente: 'Clínica Horizonte', id_setor_atendimento: 1, setor_atendimento: 'ST', status_ambiente: 'PRE-PROD', estado: 'RJ', id_usuario: 2 },
-  { id: 3, nm_cliente: 'Hospital Nova Aurora', id_setor_atendimento: 2, setor_atendimento: 'FB', status_ambiente: 'PRD', estado: 'MG', id_usuario: 3 },
-  { id: 4, nm_cliente: 'Centro Médico Prisma', id_setor_atendimento: 1, setor_atendimento: 'ST', status_ambiente: 'PRD', estado: 'MG', id_usuario: 4 },
-  { id: 5, nm_cliente: 'Instituto Vida Plena', id_setor_atendimento: 2, setor_atendimento: 'FB', status_ambiente: 'PRE-PROD', estado: 'MG', id_usuario: 5 },
-  { id: 6, nm_cliente: 'Rede Bem Estar', id_setor_atendimento: 1, setor_atendimento: 'ST', status_ambiente: 'PRD', estado: 'SP', id_usuario: 6 },
-  { id: 7, nm_cliente: 'Hospital Vale Sereno', id_setor_atendimento: 2, setor_atendimento: 'FB', status_ambiente: 'PRE-PROD', estado: 'RS', id_usuario: 7 }
+  { id: 1, nm_cliente: 'Grupo Vitalis', id_setor_atendimento: 1, setor_atendimento: 'Fábrica', status_ambiente: 'PRD', estado: 'SP', id_usuario: 1 },
+  { id: 2, nm_cliente: 'Clínica Horizonte', id_setor_atendimento: 1, setor_atendimento: 'Fábrica', status_ambiente: 'PRE-PROD', estado: 'RJ', id_usuario: 2 },
+  { id: 3, nm_cliente: 'Hospital Nova Aurora', id_setor_atendimento: 2, setor_atendimento: 'Serviços Técnicos', status_ambiente: 'PRD', estado: 'MG', id_usuario: 3 },
+  { id: 4, nm_cliente: 'Centro Médico Prisma', id_setor_atendimento: 1, setor_atendimento: 'Fábrica', status_ambiente: 'PRD', estado: 'MG', id_usuario: 4 },
+  { id: 5, nm_cliente: 'Instituto Vida Plena', id_setor_atendimento: 2, setor_atendimento: 'Serviços Técnicos', status_ambiente: 'PRE-PROD', estado: 'MG', id_usuario: 5 },
+  { id: 6, nm_cliente: 'Rede Bem Estar', id_setor_atendimento: 1, setor_atendimento: 'Fábrica', status_ambiente: 'PRD', estado: 'SP', id_usuario: 6 },
+  { id: 7, nm_cliente: 'Hospital Vale Sereno', id_setor_atendimento: 2, setor_atendimento: 'Serviços Técnicos', status_ambiente: 'PRE-PROD', estado: 'RS', id_usuario: 7 }
 ];
 
 export const mockPackages: ReleasePackage[] = [

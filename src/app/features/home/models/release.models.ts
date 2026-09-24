@@ -33,12 +33,19 @@ export interface ReleasePackage {
 }
 
 export interface PackageFilters {
-  search: string;
-  produto: string;
-  versao: string;
+  nm_pacote: string;
+  ticket: string;
+  id_produto: '' | number;
+  versao_correcao: string;
+  sn_aplicado: '' | YesNo;
   sn_aprovado_gerente: '' | YesNo;
-  sn_aprovado_code_review: '' | YesNo;
   sn_mergeado: '' | YesNo;
   ticket_bug: string;
-  setor: string;
+  id_setor: '' | number;
+}
+
+export interface PackageCount {
+  total_pacotes: number;
+  total_aplicados: number;
+  total_pendentes: number;
 }

@@ -45,10 +45,7 @@ export class ClientService {
       id: record['id'],
       nm_cliente: record['nm_cliente'],
       id_setor_atendimento: Number(record['id_setor_atendimento'] ?? 0),
-      setor_atendimento:
-        typeof record['setor_atendimento'] === 'string'
-          ? record['setor_atendimento']
-          : `Setor ${record['id_setor_atendimento'] ?? '—'}`,
+      setor_atendimento: this.getSectorLabel(record['id_setor_atendimento']),
       status_ambiente: record['status_ambiente'] === 'PRD' ? 'PRD' : 'PRE-PROD',
       estado: typeof record['estado'] === 'string' ? record['estado'] : '—',
       id_usuario: Number(record['id_usuario'] ?? 0),
@@ -57,5 +54,11 @@ export class ClientService {
 
   private asRecord(value: unknown): Record<string, unknown> | null {
     return typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : null;
+  }
+
+  private getSectorLabel(value: unknown): string {
+    if (value === 1) return 'Fábrica';
+    if (value === 2) return 'Serviços Técnicos';
+    return 'Setor não informado';
   }
 }
