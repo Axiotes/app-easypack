@@ -4,10 +4,10 @@ export interface Client {
   id: number;
   nm_cliente: string;
   id_setor_atendimento: number;
-  setor_atendimento: 'ST' | 'FB';
+  setor_atendimento: string;
   status_ambiente: 'PRE-PROD' | 'PRD';
-  cidade: string;
-  uf: string;
+  estado: string;
+  id_usuario: number;
 }
 
 export interface ReleasePackage {
