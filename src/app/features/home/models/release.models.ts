@@ -44,3 +44,12 @@ export interface PackageCount {
   total_aplicados: number;
   total_pendentes: number;
 }
+
+export interface LoggedUser {
+  id: number;
+  nm_usuario: string;
+  nm_completo: string;
+  cargo: string;
+  nm_subsetor: string;
+  nm_produto: string;
+}
