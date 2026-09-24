@@ -1,4 +1,4 @@
-import { Client, ReleasePackage } from '../models/release.models';
+import { Client } from '../models/release.models';
 
 export const mockClients: Client[] = [
   { id: 1, nm_cliente: 'Grupo Vitalis', id_setor_atendimento: 1, setor_atendimento: 'Fábrica', status_ambiente: 'PRD', estado: 'SP', id_usuario: 1 },
@@ -10,7 +10,7 @@ export const mockClients: Client[] = [
   { id: 7, nm_cliente: 'Hospital Vale Sereno', id_setor_atendimento: 2, setor_atendimento: 'Serviços Técnicos', status_ambiente: 'PRE-PROD', estado: 'RS', id_usuario: 7 }
 ];
 
-export const mockPackages: ReleasePackage[] = [
+export const mockPackages = [
   { id: 101, id_correcao: 501, nm_pacote: 'pep-core-prisma-v3.4.1.jar', tp_pacote: 'Correção', sn_aplicado: 'S', sn_aprovado_usu: 'S', sn_aprovado_gerente: 'S', correcao: { ticket: 'PEP-1042', ticket_bug: 'PEP-1091', merge: 'a7c31e5', id_cliente: 4, id_produto: 1, produto: 'PEP', setor: 'ST', sn_mergeado: 'S', versao_correcao: '3.4.1', sn_aprovado_code_review: 'S' } },
   { id: 102, id_correcao: 502, nm_pacote: 'soul-core-prisma-v2.0.3.jar', tp_pacote: 'Correção', sn_aplicado: 'N', sn_aprovado_usu: 'S', sn_aprovado_gerente: 'N', correcao: { ticket: 'SOUL-204', ticket_bug: 'SOUL-201', merge: 'q3r4s5f', id_cliente: 4, id_produto: 2, produto: 'SOUL', setor: 'ST', sn_mergeado: 'N', versao_correcao: '2.0.3', sn_aprovado_code_review: 'N' } },
   { id: 103, id_correcao: 503, nm_pacote: 'sacr-cnes-materdei-v1.1.0.jar', tp_pacote: 'Correção', sn_aplicado: 'N', sn_aprovado_usu: 'S', sn_aprovado_gerente: 'N', correcao: { ticket: 'SACR-044', ticket_bug: 'SACR-051', merge: 'df12ab8', id_cliente: 4, id_produto: 3, produto: 'SACR', setor: 'FB', sn_mergeado: 'S', versao_correcao: '1.1.0', sn_aprovado_code_review: 'S' } },

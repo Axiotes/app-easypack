@@ -7,7 +7,6 @@
     <app-client-list
       [clients]="clients()"
       [selectedClientId]="selectedClient.id"
-      [packageCount]="packageCount"
       [loading]="clientLoading()"
       [errorMessage]="clientError()"
       [searchTerm]="clientSearch()"
@@ -99,7 +98,7 @@
         <span>Pacotes encontrados</span
         ><b>{{ packageCounts().total_pacotes }} pacote{{ packageCounts().total_pacotes === 1 ? '' : 's' }}</b>
       </div>
-      <app-package-table [packages]="selectedPackages" />
+      <app-package-table [packages]="packages()" [loading]="packageLoading()" [errorMessage]="packageError()" (loadMore)="loadMorePackages()" />
     </main>
   </div>
 </div>

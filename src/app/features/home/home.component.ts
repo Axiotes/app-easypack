@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AppHeaderComponent } from './components/app-header/app-header.component';
 import { ClientListComponent } from './components/client-list/client-list.component';
 import { PackageTableComponent } from './components/package-table/package-table.component';
-import { mockClients, mockPackages } from './data/mock-release.data';
+import { mockClients } from './data/mock-release.data';
 import { Client, PackageCount, PackageFilters, ReleasePackage } from './models/release.models';
 import { ClientService } from './services/client.service';
 import { PackageService } from './services/package.service';
@@ -35,6 +35,9 @@ export class HomeComponent implements OnInit {
   private readonly searchRequests = new Subject<string>();
   private readonly packageCountRequests = new Subject<void>();
   private packageCountRequestId = 0;
+  private packageSkip = 0;
+  private hasMorePackages = true;
+  private packageDetailsRequestId = 0;
 
   protected readonly clients = signal<Client[]>([]);
   protected selectedClient = mockClients[3];
@@ -47,6 +50,9 @@ export class HomeComponent implements OnInit {
     total_aplicados: 0,
     total_pendentes: 0,
   });
+  protected readonly packages = signal<ReleasePackage[]>([]);
+  protected readonly packageLoading = signal(false);
+  protected readonly packageError = signal('');
 
   constructor() {
     this.searchRequests
@@ -61,7 +67,10 @@ export class HomeComponent implements OnInit {
       });
     this.packageCountRequests
       .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.loadPackageCount());
+      .subscribe(() => {
+        this.loadPackageCount();
+        this.resetPackageDetails();
+      });
   }
 
   ngOnInit(): void {
@@ -154,32 +163,44 @@ export class HomeComponent implements OnInit {
       },
     });
   }
-  protected get packageCount(): Record<number, number> {
-    return mockPackages.reduce<Record<number, number>>((count, item) => {
-      count[item.correcao.id_cliente] = (count[item.correcao.id_cliente] || 0) + 1;
-      return count;
-    }, {});
+  protected loadMorePackages(): void {
+    if (this.packageLoading() || !this.hasMorePackages) return;
+    const requestId = ++this.packageDetailsRequestId;
+    this.packageLoading.set(true);
+    this.packageError.set('');
+    this.packageService
+      .getDetails(this.selectedClient.id, this.packageSkip, this.pageSize, this.filters)
+      .pipe(
+        finalize(() => {
+          if (requestId === this.packageDetailsRequestId) this.packageLoading.set(false);
+        }),
+      )
+      .subscribe({
+        next: (packages) => {
+          if (requestId !== this.packageDetailsRequestId) return;
+          const currentPackages = this.packages();
+          const newPackages = packages.filter(
+            (item) => !currentPackages.some((current) => current.id === item.id),
+          );
+          this.packages.set([...currentPackages, ...newPackages]);
+          this.packageSkip += packages.length;
+          this.hasMorePackages = packages.length === this.pageSize;
+        },
+        error: () => {
+          if (requestId === this.packageDetailsRequestId) {
+            this.packageError.set('Não foi possível carregar os pacotes.');
+          }
+        },
+      });
   }
-  protected get selectedPackages(): ReleasePackage[] {
-    const f = this.filters;
-    const contains = (value: string, term: string) =>
-      value.toLowerCase().includes(term.toLowerCase().trim());
-    return mockPackages
-      .filter((item) => item.correcao.id_cliente === this.selectedClient.id)
-      .filter(
-        (item) =>
-          !f.nm_pacote || contains(item.nm_pacote, f.nm_pacote),
-      )
-      .filter((item) => !f.ticket || contains(item.correcao.ticket, f.ticket))
-      .filter((item) => !f.id_produto || item.correcao.id_produto === f.id_produto)
-      .filter((item) => !f.versao_correcao || contains(item.correcao.versao_correcao, f.versao_correcao))
-      .filter((item) => !f.sn_aplicado || item.sn_aplicado === f.sn_aplicado)
-      .filter(
-        (item) => !f.sn_aprovado_gerente || item.sn_aprovado_gerente === f.sn_aprovado_gerente,
-      )
-      .filter((item) => !f.sn_mergeado || item.correcao.sn_mergeado === f.sn_mergeado)
-      .filter((item) => !f.ticket_bug || contains(item.correcao.ticket_bug, f.ticket_bug))
-      .filter((item) => !f.id_setor || (f.id_setor === 1 ? item.correcao.setor === 'ST' : item.correcao.setor === 'FB'));
+  private resetPackageDetails(): void {
+    this.packageDetailsRequestId++;
+    this.packageSkip = 0;
+    this.hasMorePackages = true;
+    this.packages.set([]);
+    this.packageLoading.set(false);
+    this.packageError.set('');
+    this.loadMorePackages();
   }
   protected selectClient(client: Client): void {
     this.applySelectedClient(client);
@@ -193,12 +214,16 @@ export class HomeComponent implements OnInit {
     if (this.selectedClient === client) return;
     this.selectedClient = client;
     if (resetFilters) this.clearFilters();
-    else this.loadPackageCount();
+    else {
+      this.loadPackageCount();
+      this.resetPackageDetails();
+    }
   }
   protected clearFilters(): void {
     this.filters = this.emptyFilters();
     this.persistPackageFilters();
     this.loadPackageCount();
+    this.resetPackageDetails();
   }
   private persistPackageFilters(): void {
     const filters = this.filters;

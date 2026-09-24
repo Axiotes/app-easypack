@@ -14,22 +14,17 @@ export interface ReleasePackage {
   id: number;
   id_correcao: number;
   nm_pacote: string;
-  tp_pacote: string;
-  sn_aplicado: YesNo;
-  sn_aprovado_usu: YesNo;
+  versao_correcao: string;
+  id_produto: number;
+  nm_produto: string;
+  id_setor: number;
+  nm_setor: string;
+  sg_setor: string;
+  ticket: string;
+  ticket_bug: string | null;
+  sn_mergeado: YesNo;
   sn_aprovado_gerente: YesNo;
-  correcao: {
-    ticket: string;
-    ticket_bug: string;
-    merge: string;
-    id_cliente: number;
-    id_produto: number;
-    produto: string;
-    setor: 'ST' | 'FB';
-    sn_mergeado: YesNo;
-    versao_correcao: string;
-    sn_aprovado_code_review: YesNo;
-  };
+  sn_aplicado: YesNo;
 }
 
 export interface PackageFilters {
