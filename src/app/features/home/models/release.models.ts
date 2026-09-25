@@ -78,3 +78,25 @@ export interface PackageDetails {
   sn_aprovado_code_review: YesNo;
   id_usuario_aprovador: string | null;
 }
+
+export interface Product {
+  id: number;
+  nm_produto: string;
+}
+
+export interface CreatePackage {
+  tp_pacote: number;
+  nm_pacote: string;
+  id_cliente: number;
+  id_produto: number;
+  ticket: string;
+  versao_correcao: string;
+  ticket_bug: string | null;
+  merge: string | null;
+  sn_mergeado: YesNo;
+}
+
+export interface CreatedPackage {
+  id: number;
+  id_correcao: number;
+}

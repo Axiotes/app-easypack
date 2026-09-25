@@ -8,6 +8,16 @@ export class ClientService {
   private readonly http = inject(HttpClient);
   private readonly url = 'http://localhost:8000/api/v1/clientes';
 
+  getById(id: number): Observable<Client> {
+    const token = typeof localStorage === 'undefined' ? null : localStorage.getItem('token');
+    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
+    return this.http.get<unknown>(`${this.url}/${id}`, { headers }).pipe(map((response) => {
+      const client = this.toClient(response);
+      if (!client) throw new Error('Cliente inválido.');
+      return client;
+    }));
+  }
+
   getClients(skip: number, limit: number, nome = ''): Observable<Client[]> {
     const token = typeof localStorage === 'undefined' ? null : localStorage.getItem('token');
     const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;

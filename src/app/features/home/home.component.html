@@ -26,7 +26,7 @@
             {{ selectedClient.estado }}
           </p>
         </div>
-        <button class="new-package"><svg lucidePlus size="14" aria-hidden="true"></svg> Novo pacote</button>
+        <button class="new-package" routerLink="/pacotes/novo" [queryParams]="{ id_cliente: selectedClient.id }" queryParamsHandling="merge" [disabled]="!clients().length"><svg lucidePlus size="14" aria-hidden="true"></svg> Novo pacote</button>
       </section>
       <section class="metrics" style="grid-template-columns: repeat(3, 1fr)">
         <article>

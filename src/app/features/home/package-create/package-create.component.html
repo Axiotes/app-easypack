@@ -1,0 +1,68 @@
+<div class="home-shell">
+  <app-header [user]="loggedUser()" />
+  <div class="workspace">
+    <nav class="navigation" aria-label="Navegação principal">
+      <a class="active" routerLink="/home" queryParamsHandling="preserve"><svg lucideBuilding2 size="14" aria-hidden="true"></svg><span>Clientes</span></a>
+    </nav>
+    <main class="content" [attr.aria-busy]="loading() || saving()">
+      <div class="breadcrumb">Início <svg lucideChevronRight size="12" class="breadcrumb-icon" aria-hidden="true"></svg>
+        <a routerLink="/home" queryParamsHandling="preserve">Clientes</a>
+        <svg lucideChevronRight size="12" class="breadcrumb-icon" aria-hidden="true"></svg><b>Novo pacote</b>
+      </div>
+      <section class="page-heading">
+        <div><h1>Novo pacote</h1><p>Cadastre o pacote e a correção vinculada ao cliente.</p></div>
+        <a class="back-link" routerLink="/home" queryParamsHandling="preserve"><svg lucideArrowLeft size="14" aria-hidden="true"></svg>Voltar aos pacotes</a>
+      </section>
+      @if (loading()) {
+        <div class="feedback" role="status">Carregando dados do cadastro...</div>
+      } @else if (loadError()) {
+        <div class="feedback feedback--error" role="alert">{{ loadError() }} <button type="button" (click)="load()">Tentar novamente</button></div>
+      } @else {
+        <section class="client-summary" aria-label="Cliente do pacote">
+          <svg lucidePackage size="24" aria-hidden="true"></svg>
+          <div><h2>{{ client()?.nm_cliente }}</h2><p>{{ client()?.setor_atendimento }} · {{ client()?.estado }} · {{ client()?.status_ambiente }}</p></div>
+        </section>
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+          <div class="form-panels">
+            <section class="form-panel" aria-labelledby="package-heading">
+              <h2 id="package-heading">Dados do pacote</h2>
+              <div class="fields">
+                <label class="wide">Nome do pacote *<input formControlName="nm_pacote" maxlength="255" placeholder="Ex.: pep-core-v3.4.1.jar" [attr.aria-invalid]="invalid('nm_pacote')" />
+                  @if (invalid('nm_pacote')) { <small class="validation">Informe o nome do pacote (até 255 caracteres).</small> }
+                </label>
+                <label>Tipo do pacote (código) *<input type="number" step="1" formControlName="tp_pacote" placeholder="Informe o código" [attr.aria-invalid]="invalid('tp_pacote')" />
+                  @if (invalid('tp_pacote')) { <small class="validation">Informe um código inteiro.</small> }
+                </label>
+                <label>Produto *<select formControlName="id_produto" [attr.aria-invalid]="invalid('id_produto')"><option [ngValue]="null">Selecione</option>
+                  @for (product of products(); track product.id) { <option [ngValue]="product.id">{{ product.nm_produto }}</option> }
+                </select>@if (invalid('id_produto')) { <small class="validation">Selecione o produto.</small> }</label>
+              </div>
+              <div class="note"><strong>Aprovações pendentes</strong><p>O pacote será cadastrado como não aplicado e aguardará as aprovações necessárias.</p></div>
+            </section>
+            <section class="form-panel" aria-labelledby="correction-heading">
+              <h2 id="correction-heading">Dados da correção</h2>
+              <div class="fields">
+                <label>Ticket *<input formControlName="ticket" maxlength="100" placeholder="Ex.: PEP-1042" [attr.aria-invalid]="invalid('ticket')" />
+                  @if (invalid('ticket')) { <small class="validation">Informe o ticket (até 100 caracteres).</small> }
+                </label>
+                <label>Versão da correção *<input formControlName="versao_correcao" maxlength="50" placeholder="Ex.: 3.4.1" [attr.aria-invalid]="invalid('versao_correcao')" />
+                  @if (invalid('versao_correcao')) { <small class="validation">Informe a versão (até 50 caracteres).</small> }
+                </label>
+                <label>Ticket bug<input formControlName="ticket_bug" maxlength="100" placeholder="Opcional" /></label>
+                <label>Mergeado<select formControlName="sn_mergeado"><option value="N">Não</option><option value="S">Sim</option></select></label>
+                <label class="wide">Merge<input formControlName="merge" maxlength="255" placeholder="Identificador do merge (opcional)" /></label>
+              </div>
+              <div class="note"><strong>Responsável: {{ loggedUser()?.nm_completo }}</strong><p>{{ loggedUser()?.nm_subsetor }} · Code review pendente de aprovação.</p></div>
+            </section>
+          </div>
+          @if (saveError()) { <div class="feedback feedback--error" role="alert">{{ saveError() }}</div> }
+          @if (createdId(); as id) { <div class="feedback" role="status">Pacote e correção cadastrados. <a [routerLink]="['/pacotes', id]" queryParamsHandling="preserve">Ver detalhes</a></div> }
+          <div class="form-actions"><small>* Campos obrigatórios</small>
+            <a class="back-link" routerLink="/home" queryParamsHandling="preserve">Cancelar</a>
+            <button class="new-package" type="submit" [disabled]="saving() || !!createdId()"><svg lucideSave size="14" aria-hidden="true"></svg>{{ saving() ? 'Cadastrando...' : 'Cadastrar pacote e correção' }}</button>
+          </div>
+        </form>
+      }
+    </main>
+  </div>
+</div>

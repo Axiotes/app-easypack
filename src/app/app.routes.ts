@@ -6,6 +6,7 @@ export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
   { path: 'login', component: LoginComponent, title: 'Entrar | EasyPack' },
   { path: 'home', component: HomeComponent, title: 'EasyPack' },
+  { path: 'pacotes/novo', loadComponent: () => import('./features/home/package-create/package-create.component').then((m) => m.PackageCreateComponent), title: 'Novo pacote | EasyPack' },
   { path: 'pacotes/:id', loadComponent: () => import('./features/home/package-details/package-details.component').then((m) => m.PackageDetailsComponent), title: 'Detalhes do pacote | EasyPack' },
   { path: '**', redirectTo: 'login' }
 ];

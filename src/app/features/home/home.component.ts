@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Component, DestroyRef, OnInit, PLATFORM_ID, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AppHeaderComponent } from './components/app-header/app-header.component';
 import { ClientListComponent } from './components/client-list/client-list.component';
 import { PackageTableComponent } from './components/package-table/package-table.component';
@@ -17,7 +17,7 @@ import { Subject, debounceTime, distinctUntilChanged, finalize, map } from 'rxjs
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [LucideBuilding2, LucideChevronRight, LucideListFilter, LucidePlus, FormsModule, AppHeaderComponent, ClientListComponent, PackageTableComponent],
+  imports: [RouterLink, LucideBuilding2, LucideChevronRight, LucideListFilter, LucidePlus, FormsModule, AppHeaderComponent, ClientListComponent, PackageTableComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })

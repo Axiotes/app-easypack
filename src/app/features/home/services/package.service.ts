@@ -1,12 +1,24 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PackageCount, PackageDetails, PackageFilters, ReleasePackage } from '../models/release.models';
+import { CreatePackage, CreatedPackage, Product, PackageCount, PackageDetails, PackageFilters, ReleasePackage } from '../models/release.models';
 
 @Injectable({ providedIn: 'root' })
 export class PackageService {
   private readonly http = inject(HttpClient);
   private readonly url = 'http://localhost:8000/api/v1/pacotes';
+
+  create(data: CreatePackage): Observable<CreatedPackage> {
+    const token = typeof localStorage === 'undefined' ? null : localStorage.getItem('token');
+    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
+    return this.http.post<CreatedPackage>(this.url, data, { headers });
+  }
+
+  getProducts(): Observable<Product[]> {
+    const token = typeof localStorage === 'undefined' ? null : localStorage.getItem('token');
+    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
+    return this.http.get<Product[]>('http://localhost:8000/api/v1/produtos', { headers });
+  }
 
   getById(id: number): Observable<PackageDetails> {
     const token = typeof localStorage === 'undefined' ? null : localStorage.getItem('token');
