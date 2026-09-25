@@ -1,12 +1,75 @@
 <div class="table-wrap" style="max-height: 420px" (scroll)="onScroll($event)">
   <table>
-    <thead><tr><th></th><th>Pacote / versão</th><th>Produto</th><th>Setor</th><th>Ticket / bug</th><th>Merge</th><th>Aprovação GP</th><th>Aplicação</th></tr></thead>
+    <thead>
+      <tr>
+        <th>Pacote / versão</th>
+        <th>Produto</th>
+        <th>Setor</th>
+        <th>Ticket / bug</th>
+        <th>Merge</th>
+        <th>Aprovação GP</th>
+        <th>Aplicação</th>
+      </tr>
+    </thead>
     <tbody>
       @for (item of packages; track item.id) {
-        <tr><td><input type="checkbox" [attr.aria-label]="'Selecionar ' + item.nm_pacote" /></td><td><strong>{{ item.nm_pacote }}</strong><small>v{{ item.versao_correcao }}</small></td><td><span [class]="productClass(item.nm_produto)">{{ item.nm_produto }}</span></td><td><span class="subsector">{{ item.sg_setor }}</span></td><td><span class="ticket">{{ item.ticket }}</span>@if (item.ticket_bug) { <span class="ticket ticket--bug">{{ item.ticket_bug }}</span> }</td><td><span class="status" [class.status--yes]="item.sn_mergeado === 'S'">{{ label(item.sn_mergeado, '✓ Mergeado', '— Não mergeado') }}</span></td><td><span class="status" [class.status--yes]="item.sn_aprovado_gerente === 'S'" [class.status--pending]="item.sn_aprovado_gerente === 'N'">{{ label(item.sn_aprovado_gerente, '✓ Aprovado', '• Pendente') }}</span></td><td><span class="status" [class.status--yes]="item.sn_aplicado === 'S'">{{ label(item.sn_aplicado, '✓ Aplicado', '— Não aplicado') }}</span></td></tr>
-      } @empty { @if (!loading) { <tr><td class="no-results" colspan="8">Nenhum pacote encontrado com os filtros selecionados.</td></tr> } }
-      @if (loading) { <tr><td class="no-results" colspan="8">Carregando pacotes...</td></tr> }
-      @if (errorMessage) { <tr><td class="no-results" colspan="8">{{ errorMessage }}</td></tr> }
+        <tr class="package-row" [routerLink]="['/pacotes', item.id]" queryParamsHandling="preserve"
+          tabindex="0" (keydown.enter)="openPackage(item.id)"
+          [attr.aria-label]="'Ver detalhes do pacote ' + item.nm_pacote">
+          <td>
+            <strong>{{ item.nm_pacote }}</strong
+            ><small>v{{ item.versao_correcao }}</small>
+          </td>
+          <td>
+            <span [class]="productClass(item.nm_produto)">{{ item.nm_produto }}</span>
+          </td>
+          <td>
+            <span class="subsector">{{ item.sg_setor }}</span>
+          </td>
+          <td>
+            <span class="ticket">{{ item.ticket }}</span>
+            @if (item.ticket_bug) {
+              <span class="ticket ticket--bug">{{ item.ticket_bug }}</span>
+            }
+          </td>
+          <td>
+            <span class="status" [class.status--yes]="item.sn_mergeado === 'S'">{{
+              label(item.sn_mergeado, '✓ Mergeado', '— Não mergeado')
+            }}</span>
+          </td>
+          <td>
+            <span
+              class="status"
+              [class.status--yes]="item.sn_aprovado_gerente === 'S'"
+              [class.status--pending]="item.sn_aprovado_gerente === 'N'"
+              >{{ label(item.sn_aprovado_gerente, '✓ Aprovado', '• Pendente') }}</span
+            >
+          </td>
+          <td>
+            <span class="status" [class.status--yes]="item.sn_aplicado === 'S'">{{
+              label(item.sn_aplicado, '✓ Aplicado', '— Não aplicado')
+            }}</span>
+          </td>
+        </tr>
+      } @empty {
+        @if (!loading) {
+          <tr>
+            <td class="no-results" colspan="7">
+              Nenhum pacote encontrado com os filtros selecionados.
+            </td>
+          </tr>
+        }
+      }
+      @if (loading) {
+        <tr>
+          <td class="no-results" colspan="7">Carregando pacotes...</td>
+        </tr>
+      }
+      @if (errorMessage) {
+        <tr>
+          <td class="no-results" colspan="7">{{ errorMessage }}</td>
+        </tr>
+      }
     </tbody>
   </table>
 </div>

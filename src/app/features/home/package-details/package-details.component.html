@@ -1,0 +1,50 @@
+<div class="home-shell">
+  <app-header [user]="loggedUser()" />
+  <div class="workspace">
+    <nav class="navigation" aria-label="Navegação principal">
+      <a class="active" routerLink="/home" queryParamsHandling="preserve">▣ <span>Clientes</span></a>
+    </nav>
+    <main class="content" [attr.aria-busy]="loading()">
+      <div class="breadcrumb">
+        Início <span>›</span> <a routerLink="/home" queryParamsHandling="preserve">Clientes</a>
+        <span>›</span> <b>Detalhes do pacote</b>
+      </div>
+      <section class="page-heading">
+        <div>
+          <h1>Detalhes do pacote</h1>
+          <p>Informações do pacote, da correção e das aprovações.</p>
+        </div>
+        <a class="back-link" routerLink="/home" queryParamsHandling="preserve">← Voltar aos pacotes</a>
+      </section>
+      @if (loading()) {
+        <div class="feedback" role="status">Carregando detalhes do pacote...</div>
+      } @else if (error()) {
+        <div class="feedback feedback--error" role="alert">{{ error() }}</div>
+      } @else if (details(); as item) {
+        <section class="package-summary" aria-label="Resumo do pacote">
+          <span class="package-icon" aria-hidden="true">▣</span>
+          <div><h2>{{ item.nm_pacote }}</h2><p>{{ item.id_cliente }} · {{ item.id_produto }} · v{{ item.versao_correcao }}</p></div>
+          <span class="badge" [class.badge--yes]="item.sn_aplicado === 'S'">{{ item.sn_aplicado === 'S' ? 'Aplicado' : 'Não aplicado' }}</span>
+        </section>
+        <div class="detail-sections">
+          @for (section of sections; track section.title) {
+            <section class="detail-panel" [attr.aria-label]="section.title">
+              <h2>{{ section.title }}</h2>
+              <dl>
+                @for (field of section.fields; track field.key) {
+                  <div class="detail-field">
+                    <dt>{{ field.label }}</dt>
+                    <dd>
+                      <span [class.badge]="field.status" [class.badge--yes]="field.status && item[field.key] === 'S'"
+                        [class.badge--pending]="field.status && item[field.key] === 'N'">{{ display(item[field.key], field.status) }}</span>
+                    </dd>
+                  </div>
+                }
+              </dl>
+            </section>
+          }
+        </div>
+      }
+    </main>
+  </div>
+</div>

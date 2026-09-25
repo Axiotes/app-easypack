@@ -53,3 +53,28 @@ export interface LoggedUser {
   nm_subsetor: string;
   nm_produto: string;
 }
+
+// Matches PacoteCompletoRead: references other than package/correction IDs are names.
+export interface PackageDetails {
+  id: number;
+  id_correcao: number;
+  tp_pacote: number;
+  nm_pacote: string;
+  sn_aplicado: YesNo;
+  sn_aprovado_usu: YesNo | null;
+  sn_aprovado_gerente: YesNo;
+  id_usuario_aplicacao: string | null;
+  id_usuario_aprovador_gerente: string | null;
+  id_usuario_aprovador_par: string | null;
+  ticket: string;
+  ticket_bug: string | null;
+  merge: string | null;
+  id_cliente: string;
+  id_produto: string;
+  id_usuario: string;
+  id_setor: string;
+  sn_mergeado: YesNo | null;
+  versao_correcao: string;
+  sn_aprovado_code_review: YesNo;
+  id_usuario_aprovador: string | null;
+}

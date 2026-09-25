@@ -1,12 +1,18 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PackageCount, PackageFilters, ReleasePackage } from '../models/release.models';
+import { PackageCount, PackageDetails, PackageFilters, ReleasePackage } from '../models/release.models';
 
 @Injectable({ providedIn: 'root' })
 export class PackageService {
   private readonly http = inject(HttpClient);
   private readonly url = 'http://localhost:8000/api/v1/pacotes';
+
+  getById(id: number): Observable<PackageDetails> {
+    const token = typeof localStorage === 'undefined' ? null : localStorage.getItem('token');
+    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
+    return this.http.get<PackageDetails>(`${this.url}/${id}/detalhes`, { headers });
+  }
 
   getCount(idCliente: number, filters: PackageFilters): Observable<PackageCount> {
     const { headers, params } = this.requestOptions(idCliente, filters);
