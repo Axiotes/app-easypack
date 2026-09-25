@@ -1,8 +1,7 @@
 <aside class="client-list">
   <div class="client-list__title">CLIENTES</div>
   <label class="client-search"
-    ><span>⌕</span
-    ><input
+    ><svg lucideSearch size="14" aria-hidden="true"></svg><input
       [(ngModel)]="search"
       (ngModelChange)="searchChange.emit($event)"
       placeholder="Buscar cliente..."
@@ -16,9 +15,9 @@
       >
         <span class="client__count">{{ packageCount[client.id] || 0 }}</span>
         <strong>{{ client.nm_cliente }}</strong
-        ><small>⌖ {{ client.estado }} · {{ client.setor_atendimento }}</small>
+        ><small><svg lucideMapPin size="10" aria-hidden="true"></svg> {{ client.estado }} · {{ client.setor_atendimento }}</small>
         <span [class]="environmentClass(client.status_ambiente)"
-          ><i></i>{{ client.status_ambiente }}</span
+          ><svg lucideCircle size="5" class="environment-dot" aria-hidden="true"></svg>{{ client.status_ambiente }}</span
         >
       </button>
     } @empty {

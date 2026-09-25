@@ -1,14 +1,14 @@
 <main class="login-page">
   <section class="intro" aria-label="Apresentação do EasyPack">
-    <div class="intro__topbar"><app-brand /><span class="environment"><i></i> Produção</span></div>
+    <div class="intro__topbar"><app-brand /><span class="environment"><svg lucideCircle size="6" class="environment-dot" aria-hidden="true"></svg> Produção</span></div>
     <div class="intro__content">
-      <p class="eyebrow"><span></span> GOVERNANÇA DE RELEASES</p>
+      <p class="eyebrow"><svg lucideDiamond size="9" class="eyebrow-icon" aria-hidden="true"></svg> GOVERNANÇA DE RELEASES</p>
       <h1>Implantações seguras,<br /><em>controle total.</em></h1>
       <p class="intro__description">Centralize a gestão de pacotes e correções dos seus clientes com rastreabilidade em cada etapa.</p>
       <div class="guardrails">
-        <div class="guardrail"><span class="guardrail__icon guardrail__icon--blue">⌘</span><div><strong>Fluxo controlado</strong><small>Aprovações antes da aplicação</small></div></div>
-        <div class="guardrail"><span class="guardrail__icon guardrail__icon--green">✓</span><div><strong>Permissões por perfil</strong><small>Acesso conforme setor e produto</small></div></div>
-        <div class="guardrail"><span class="guardrail__icon guardrail__icon--purple">◌</span><div><strong>Rastreabilidade completa</strong><small>Histórico de cada alteração</small></div></div>
+        <div class="guardrail"><span class="guardrail__icon guardrail__icon--blue"><svg lucideWorkflow size="16" aria-hidden="true"></svg></span><div><strong>Fluxo controlado</strong><small>Aprovações antes da aplicação</small></div></div>
+        <div class="guardrail"><span class="guardrail__icon guardrail__icon--green"><svg lucideShieldCheck size="16" aria-hidden="true"></svg></span><div><strong>Permissões por perfil</strong><small>Acesso conforme setor e produto</small></div></div>
+        <div class="guardrail"><span class="guardrail__icon guardrail__icon--purple"><svg lucideHistory size="16" aria-hidden="true"></svg></span><div><strong>Rastreabilidade completa</strong><small>Histórico de cada alteração</small></div></div>
       </div>
     </div>
     <footer>© 2026 EasyPack <span></span> Plataforma de gestão de releases</footer>
@@ -19,13 +19,13 @@
       <div class="access__heading"><p class="eyebrow">ACESSO RESTRITO</p><h2 id="login-title">Bem-vindo de volta</h2><p>Entre com suas credenciais para continuar.</p></div>
       <form (ngSubmit)="submit()" #loginForm="ngForm" novalidate>
         <label for="username">Usuário</label>
-        <div class="field" [class.field--invalid]="submitted() && !username()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 7l8 6 8-6" /></svg><input id="username" name="username" type="text" autocomplete="username" placeholder="maria.silva" [(ngModel)]="username" required /></div>
+        <div class="field" [class.field--invalid]="submitted() && !username()"><svg lucideUserRound size="17" aria-hidden="true"></svg><input id="username" name="username" type="text" autocomplete="username" placeholder="maria.silva" [(ngModel)]="username" required /></div>
         @if (submitted() && !username()) { <p class="validation">Informe seu usuário.</p> }
         <div class="label-row"><label for="password">Senha</label><a href="/login">Esqueci minha senha</a></div>
-        <div class="field" [class.field--invalid]="submitted() && !password()"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></svg><input id="password" name="password" [type]="showPassword() ? 'text' : 'password'" autocomplete="current-password" placeholder="••••••••" [(ngModel)]="password" required /><button type="button" class="visibility" (click)="showPassword.set(!showPassword())" [attr.aria-label]="showPassword() ? 'Ocultar senha' : 'Mostrar senha'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" /><circle cx="12" cy="12" r="2.6" /></svg></button></div>
+        <div class="field" [class.field--invalid]="submitted() && !password()"><svg lucideLockKeyhole size="17" aria-hidden="true"></svg><input id="password" name="password" [type]="showPassword() ? 'text' : 'password'" autocomplete="current-password" placeholder="••••••••" [(ngModel)]="password" required /><button type="button" class="visibility" (click)="showPassword.set(!showPassword())" [attr.aria-label]="showPassword() ? 'Ocultar senha' : 'Mostrar senha'">@if (showPassword()) { <svg lucideEyeOff size="18" aria-hidden="true"></svg> } @else { <svg lucideEye size="18" aria-hidden="true"></svg> }</button></div>
         @if (submitted() && !password()) { <p class="validation">Informe sua senha.</p> }
         @if (feedback(); as message) { <p class="feedback" [class.feedback--success]="message.type === 'success'" [class.feedback--error]="message.type === 'error'" role="status">{{ message.text }}</p> }
-        <button class="submit" type="submit" [disabled]="loading()">{{ loading() ? 'Entrando...' : 'Entrar na plataforma' }} <span>→</span></button>
+        <button class="submit" type="submit" [disabled]="loading()">{{ loading() ? 'Entrando...' : 'Entrar na plataforma' }} <svg lucideArrowRight size="18" aria-hidden="true"></svg></button>
       </form>
       <p class="support">Precisa de ajuda? <a href="mailto:suporte@mv.com.br">Fale com o suporte</a></p>
     </div>

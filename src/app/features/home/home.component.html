@@ -2,7 +2,7 @@
   <app-header [user]="loggedUser()" />
   <div class="workspace">
     <nav class="navigation" aria-label="Navegação principal">
-      <a class="active">▣ <span>Clientes</span></a>
+      <a class="active"><svg lucideBuilding2 size="14" aria-hidden="true"></svg> <span>Clientes</span></a>
     </nav>
     <app-client-list
       [clients]="clients()"
@@ -16,7 +16,7 @@
     />
     <main class="content">
       <div class="breadcrumb">
-        Início <span>›</span> Clientes <span>›</span> <b>{{ selectedClient.nm_cliente }}</b>
+        Início <svg lucideChevronRight size="12" class="breadcrumb-icon" aria-hidden="true"></svg> Clientes <svg lucideChevronRight size="12" class="breadcrumb-icon" aria-hidden="true"></svg> <b>{{ selectedClient.nm_cliente }}</b>
       </div>
       <section class="page-heading">
         <div>
@@ -26,7 +26,7 @@
             {{ selectedClient.estado }}
           </p>
         </div>
-        <button class="new-package">＋ Novo pacote</button>
+        <button class="new-package"><svg lucidePlus size="14" aria-hidden="true"></svg> Novo pacote</button>
       </section>
       <section class="metrics" style="grid-template-columns: repeat(3, 1fr)">
         <article>
@@ -41,7 +41,7 @@
       </section>
       <section class="filter-panel" aria-label="Filtros de pacotes">
         <div class="filter-panel__heading">
-          <span>⌘ FILTRAR PACOTES</span><button (click)="clearFilters()">Limpar filtros</button>
+          <span><svg lucideListFilter size="12" aria-hidden="true"></svg> FILTRAR PACOTES</span><button (click)="clearFilters()">Limpar filtros</button>
         </div>
         <div class="filters">
           <label class="filter filter--wide"

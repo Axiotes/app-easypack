@@ -22,3 +22,5 @@ dd { color: #b9c9e2; font: 11px ui-monospace, monospace; margin: 0; overflow-wra
 .feedback--error { color: #efb0b0; }
 @media (max-width: 1000px) { .detail-sections { grid-template-columns: 1fr; } }
 @media (max-width: 500px) { .page-heading, .package-summary { align-items: flex-start; flex-direction: column; } dl { grid-template-columns: 1fr; } }
+
+.back-link { display: inline-flex; align-items: center; gap: 6px; }

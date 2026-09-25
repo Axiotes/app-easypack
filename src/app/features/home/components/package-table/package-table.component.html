@@ -33,22 +33,18 @@
             }
           </td>
           <td>
-            <span class="status" [class.status--yes]="item.sn_mergeado === 'S'">{{
-              label(item.sn_mergeado, '✓ Mergeado', '— Não mergeado')
-            }}</span>
+            <span class="status" [class.status--yes]="item.sn_mergeado === 'S'">@if (item.sn_mergeado === 'S') { <svg lucideCheck size="10" aria-hidden="true"></svg> } @else { <svg lucideMinus size="10" aria-hidden="true"></svg> } {{ label(item.sn_mergeado, 'Mergeado', 'Não mergeado') }}</span>
           </td>
           <td>
             <span
               class="status"
               [class.status--yes]="item.sn_aprovado_gerente === 'S'"
               [class.status--pending]="item.sn_aprovado_gerente === 'N'"
-              >{{ label(item.sn_aprovado_gerente, '✓ Aprovado', '• Pendente') }}</span
+              >@if (item.sn_aprovado_gerente === 'S') { <svg lucideCheck size="10" aria-hidden="true"></svg> } @else { <svg lucideClock size="10" aria-hidden="true"></svg> } {{ label(item.sn_aprovado_gerente, 'Aprovado', 'Pendente') }}</span
             >
           </td>
           <td>
-            <span class="status" [class.status--yes]="item.sn_aplicado === 'S'">{{
-              label(item.sn_aplicado, '✓ Aplicado', '— Não aplicado')
-            }}</span>
+            <span class="status" [class.status--yes]="item.sn_aplicado === 'S'">@if (item.sn_aplicado === 'S') { <svg lucideCheck size="10" aria-hidden="true"></svg> } @else { <svg lucideMinus size="10" aria-hidden="true"></svg> } {{ label(item.sn_aplicado, 'Aplicado', 'Não aplicado') }}</span>
           </td>
         </tr>
       } @empty {

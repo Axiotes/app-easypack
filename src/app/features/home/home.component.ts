@@ -1,3 +1,4 @@
+import { LucideBuilding2, LucideChevronRight, LucideListFilter, LucidePlus } from '@lucide/angular';
 import { isPlatformBrowser } from '@angular/common';
 import { Component, DestroyRef, OnInit, PLATFORM_ID, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -16,7 +17,7 @@ import { Subject, debounceTime, distinctUntilChanged, finalize, map } from 'rxjs
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [FormsModule, AppHeaderComponent, ClientListComponent, PackageTableComponent],
+  imports: [LucideBuilding2, LucideChevronRight, LucideListFilter, LucidePlus, FormsModule, AppHeaderComponent, ClientListComponent, PackageTableComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })

@@ -1,8 +1,9 @@
+import { LucideCircle, LucideMapPin, LucideSearch } from '@lucide/angular';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Client } from '../../models/release.models';
 
-@Component({ selector: 'app-client-list', standalone: true, imports: [FormsModule], templateUrl: './client-list.component.html', styleUrl: './client-list.component.scss' })
+@Component({ selector: 'app-client-list', standalone: true, imports: [LucideCircle, LucideMapPin, LucideSearch, FormsModule], templateUrl: './client-list.component.html', styleUrl: './client-list.component.scss' })
 export class ClientListComponent {
   @Input({ required: true }) clients: Client[] = [];
   @Input({ required: true }) selectedClientId = 0;

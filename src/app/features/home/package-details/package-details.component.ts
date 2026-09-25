@@ -1,3 +1,4 @@
+import { LucideArrowLeft, LucideBuilding2, LucideChevronRight, LucidePackage } from '@lucide/angular';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, DestroyRef, PLATFORM_ID, inject, signal } from '@angular/core';
@@ -18,7 +19,7 @@ interface DetailField {
 @Component({
   selector: 'app-package-details',
   standalone: true,
-  imports: [RouterLink, AppHeaderComponent],
+  imports: [LucideArrowLeft, LucideBuilding2, LucideChevronRight, LucidePackage, RouterLink, AppHeaderComponent],
   templateUrl: './package-details.component.html',
   styleUrls: ['../home.component.scss', './package-details.component.scss'],
 })

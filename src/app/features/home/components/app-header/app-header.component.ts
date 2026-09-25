@@ -1,8 +1,9 @@
+import { LucideChevronDown } from '@lucide/angular';
 import { Component, Input } from '@angular/core';
 import { BrandComponent } from '../../../../shared/components/brand/brand.component';
 import { LoggedUser } from '../../models/release.models';
 
-@Component({ selector: 'app-header', standalone: true, imports: [BrandComponent], templateUrl: './app-header.component.html', styleUrl: './app-header.component.scss' })
+@Component({ selector: 'app-header', standalone: true, imports: [LucideChevronDown, BrandComponent], templateUrl: './app-header.component.html', styleUrl: './app-header.component.scss' })
 export class AppHeaderComponent {
   @Input() user: LoggedUser | null = null;
 

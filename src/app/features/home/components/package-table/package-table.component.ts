@@ -1,3 +1,4 @@
+import { LucideCheck, LucideClock, LucideMinus } from '@lucide/angular';
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ReleasePackage } from '../../models/release.models';
@@ -5,7 +6,7 @@ import { ReleasePackage } from '../../models/release.models';
 @Component({
   selector: 'app-package-table',
   standalone: true,
-  imports: [RouterLink],
+  imports: [LucideCheck, LucideClock, LucideMinus, RouterLink],
   templateUrl: './package-table.component.html',
   styleUrl: './package-table.component.scss',
 })

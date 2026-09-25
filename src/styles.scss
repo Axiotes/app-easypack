@@ -3,3 +3,5 @@
 html, body { min-height: 100%; margin: 0; }
 body { min-width: 320px; }
 button, input { font: inherit; }
+
+svg.lucide { display: inline-block; flex-shrink: 0; vertical-align: middle; }

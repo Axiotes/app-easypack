@@ -1,3 +1,4 @@
+import { LucideArrowRight, LucideCircle, LucideDiamond, LucideEye, LucideEyeOff, LucideHistory, LucideLockKeyhole, LucideShieldCheck, LucideUserRound, LucideWorkflow } from '@lucide/angular';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +13,7 @@ interface LoginResponse {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, BrandComponent],
+  imports: [LucideArrowRight, LucideCircle, LucideDiamond, LucideEye, LucideEyeOff, LucideHistory, LucideLockKeyhole, LucideShieldCheck, LucideUserRound, LucideWorkflow, FormsModule, BrandComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
