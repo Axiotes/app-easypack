@@ -20,7 +20,7 @@
       } @else {
         <section class="client-summary" aria-label="Cliente do pacote">
           <svg lucidePackage size="24" aria-hidden="true"></svg>
-          <div><h2>{{ client()?.nm_cliente }}</h2><p>{{ client()?.setor_atendimento }} · {{ client()?.estado }} · {{ client()?.status_ambiente }}</p></div>
+          <div><h2>{{ client()?.nm_cliente }}</h2><p>{{ client()?.setor_atendimento }}</p></div>
         </section>
         <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
           <div class="form-panels">

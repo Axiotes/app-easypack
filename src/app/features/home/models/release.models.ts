@@ -5,9 +5,30 @@ export interface Client {
   nm_cliente: string;
   id_setor_atendimento: number;
   setor_atendimento: string;
-  status_ambiente: 'PRE-PROD' | 'PRD';
-  estado: string;
   id_usuario: number;
+}
+
+export interface Setor {
+  id: number;
+  nm_setor: string;
+  sg_setor: string;
+}
+
+export interface Subsetor {
+  id: number;
+  id_setor: number;
+  nm_subsetor: string;
+  id_produto: number | null;
+  sn_gerencia: YesNo;
+}
+
+export interface UsuarioRaw {
+  id: number;
+  nm_usuario: string;
+  nm_completo: string;
+  cargo: string;
+  id_subsetor: number;
+  id_produto: number;
 }
 
 export interface ReleasePackage {

@@ -1,74 +1,65 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { Client } from '../models/release.models';
+import { Observable, map, shareReplay, switchMap } from 'rxjs';
+import { Client, Setor } from '../models/release.models';
+import { authHeaders } from './auth-headers';
+import { ReferenceDataService } from './reference-data.service';
+
+interface ClienteRaw {
+  id: number;
+  nm_cliente: string;
+  id_setor_atendimento: number;
+  id_usuario: number;
+}
 
 @Injectable({ providedIn: 'root' })
 export class ClientService {
   private readonly http = inject(HttpClient);
+  private readonly referenceData = inject(ReferenceDataService);
   private readonly url = 'http://localhost:8000/api/v1/clientes';
+  private clients$?: Observable<Client[]>;
 
   getById(id: number): Observable<Client> {
-    const token = typeof localStorage === 'undefined' ? null : localStorage.getItem('token');
-    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
-    return this.http.get<unknown>(`${this.url}/${id}`, { headers }).pipe(map((response) => {
-      const client = this.toClient(response);
-      if (!client) throw new Error('Cliente inválido.');
-      return client;
-    }));
+    return this.http.get<ClienteRaw>(`${this.url}/${id}`, { headers: authHeaders() }).pipe(
+      switchMap((raw) =>
+        this.referenceData.getSetores().pipe(map((setores) => this.toClient(raw, setores))),
+      ),
+    );
   }
 
+  /** O backend não suporta paginação nem busca por nome; filtra e pagina em memória. */
   getClients(skip: number, limit: number, nome = ''): Observable<Client[]> {
-    const token = typeof localStorage === 'undefined' ? null : localStorage.getItem('token');
-    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
-    let params = new HttpParams().set('skip', skip).set('limit', limit);
-    if (nome) params = params.set('nome', nome);
-    const endpoint = nome ? `${this.url}/busca` : this.url;
-
-    return this.http
-      .get<unknown>(endpoint, { headers, params })
-      .pipe(map((response) => this.extractClients(response)));
+    return this.allClients().pipe(
+      map((clients) => {
+        const filtered = nome
+          ? clients.filter((client) => client.nm_cliente.toLowerCase().includes(nome.toLowerCase()))
+          : clients;
+        return filtered.slice(skip, skip + limit);
+      }),
+    );
   }
 
-  private extractClients(response: unknown): Client[] {
-    const payload = this.asRecord(response);
-    const records = Array.isArray(response)
-      ? response
-      : (payload?.['clientes'] ??
-        payload?.['items'] ??
-        payload?.['data'] ??
-        payload?.['results'] ??
-        []);
-
-    if (!Array.isArray(records)) return [];
-    return records
-      .map((record) => this.toClient(record))
-      .filter((client): client is Client => client !== null);
+  private allClients(): Observable<Client[]> {
+    this.clients$ ??= this.http.get<ClienteRaw[]>(this.url, { headers: authHeaders() }).pipe(
+      switchMap((raw) =>
+        this.referenceData
+          .getSetores()
+          .pipe(map((setores) => raw.map((item) => this.toClient(item, setores)))),
+      ),
+      shareReplay(1),
+    );
+    return this.clients$;
   }
 
-  private toClient(value: unknown): Client | null {
-    const record = this.asRecord(value);
-    if (!record || typeof record['id'] !== 'number' || typeof record['nm_cliente'] !== 'string')
-      return null;
-
+  private toClient(raw: ClienteRaw, setores: Setor[]): Client {
     return {
-      id: record['id'],
-      nm_cliente: record['nm_cliente'],
-      id_setor_atendimento: Number(record['id_setor_atendimento'] ?? 0),
-      setor_atendimento: this.getSectorLabel(record['id_setor_atendimento']),
-      status_ambiente: record['status_ambiente'] === 'PRD' ? 'PRD' : 'PRE-PROD',
-      estado: typeof record['estado'] === 'string' ? record['estado'] : '—',
-      id_usuario: Number(record['id_usuario'] ?? 0),
+      id: raw.id,
+      nm_cliente: raw.nm_cliente,
+      id_setor_atendimento: raw.id_setor_atendimento,
+      setor_atendimento:
+        setores.find((setor) => setor.id === raw.id_setor_atendimento)?.nm_setor ??
+        'Setor não informado',
+      id_usuario: raw.id_usuario,
     };
-  }
-
-  private asRecord(value: unknown): Record<string, unknown> | null {
-    return typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : null;
-  }
-
-  private getSectorLabel(value: unknown): string {
-    if (value === 1) return 'Fábrica';
-    if (value === 2) return 'Serviços Técnicos';
-    return 'Setor não informado';
   }
 }

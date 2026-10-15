@@ -8,9 +8,10 @@ import { AppHeaderComponent } from './components/app-header/app-header.component
 import { ClientListComponent } from './components/client-list/client-list.component';
 import { PackageTableComponent } from './components/package-table/package-table.component';
 import { mockClients } from './data/mock-release.data';
-import { Client, LoggedUser, PackageCount, PackageFilters, ReleasePackage } from './models/release.models';
+import { Client, LoggedUser, PackageCount, PackageFilters, Product, ReleasePackage, Setor } from './models/release.models';
 import { ClientService } from './services/client.service';
 import { PackageService } from './services/package.service';
+import { ReferenceDataService } from './services/reference-data.service';
 import { UserService } from './services/user.service';
 import { Subject, debounceTime, distinctUntilChanged, finalize, map } from 'rxjs';
 
@@ -25,6 +26,7 @@ export class HomeComponent implements OnInit {
   private readonly clientService = inject(ClientService);
   private readonly packageService = inject(PackageService);
   private readonly userService = inject(UserService);
+  private readonly referenceData = inject(ReferenceDataService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly route = inject(ActivatedRoute);
@@ -57,6 +59,8 @@ export class HomeComponent implements OnInit {
   protected readonly packageLoading = signal(false);
   protected readonly packageError = signal('');
   protected readonly loggedUser = signal<LoggedUser | null>(null);
+  protected readonly products = signal<Product[]>([]);
+  protected readonly setores = signal<Setor[]>([]);
 
   constructor() {
     this.searchRequests
@@ -81,6 +85,8 @@ export class HomeComponent implements OnInit {
     if (!isPlatformBrowser(this.platformId)) return;
     this.filters = this.filtersFromRoute();
     this.loadCurrentUser();
+    this.referenceData.getProdutos().subscribe((products) => this.products.set(products));
+    this.referenceData.getSetores().subscribe((setores) => this.setores.set(setores));
 
     this.route.queryParamMap
       .pipe(

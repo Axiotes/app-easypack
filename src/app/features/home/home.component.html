@@ -22,8 +22,7 @@
         <div>
           <h1>{{ selectedClient.nm_cliente }}</h1>
           <p>
-            Setor de atendimento: <b>{{ selectedClient.setor_atendimento }}</b> · Estado:
-            {{ selectedClient.estado }}
+            Setor de atendimento: <b>{{ selectedClient.setor_atendimento }}</b>
           </p>
         </div>
         <button class="new-package" routerLink="/pacotes/novo" [queryParams]="{ id_cliente: selectedClient.id }" queryParamsHandling="merge" [disabled]="!clients().length"><svg lucidePlus size="14" aria-hidden="true"></svg> Novo pacote</button>
@@ -53,10 +52,9 @@
             ><span>Produto</span
             ><select [(ngModel)]="filters.id_produto" (ngModelChange)="updatePackageFilters()">
               <option [ngValue]="''">Todos</option>
-              <option [ngValue]="1">PEP</option>
-              <option [ngValue]="2">SOUL</option>
-              <option [ngValue]="3">SACR</option>
-              <option [ngValue]="4">PAGU</option>
+              @for (product of products(); track product.id) {
+                <option [ngValue]="product.id">{{ product.nm_produto }}</option>
+              }
             </select></label
           ><label class="filter"
             ><span>Versão</span><input [(ngModel)]="filters.versao_correcao" (ngModelChange)="updatePackageFilters()" placeholder="Ex.: 3.4" /></label
@@ -88,8 +86,9 @@
             ><span>Setor</span
             ><select [(ngModel)]="filters.id_setor" (ngModelChange)="updatePackageFilters()">
               <option [ngValue]="''">Todos</option>
-              <option [ngValue]="1">ST</option>
-              <option [ngValue]="2">FB</option>
+              @for (setor of setores(); track setor.id) {
+                <option [ngValue]="setor.id">{{ setor.sg_setor }}</option>
+              }
             </select></label
           >
         </div>
