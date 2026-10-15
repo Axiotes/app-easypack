@@ -1,0 +1,53 @@
+.recovery-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.recovery-step {
+  display: flex;
+  gap: .8rem;
+}
+
+.recovery-step__icon {
+  align-items: center;
+  background: #0c1627;
+  border: 1px solid #263653;
+  border-radius: 999px;
+  color: #6593ff;
+  display: flex;
+  flex: none;
+  font-size: .78rem;
+  font-weight: 600;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+}
+
+.recovery-step strong {
+  color: #edf3ff;
+  display: block;
+  font-size: .85rem;
+  margin-bottom: .25rem;
+}
+
+.recovery-step p {
+  color: #8394b1;
+  font-size: .78rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.back-link {
+  align-items: center;
+  color: #b8c6dc;
+  display: flex;
+  font-size: .78rem;
+  gap: .45rem;
+  margin-top: 1.8rem;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: #edf3ff;
+}

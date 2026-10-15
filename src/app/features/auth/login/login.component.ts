@@ -2,7 +2,7 @@ import { LucideArrowRight, LucideCircle, LucideDiamond, LucideEye, LucideEyeOff,
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
 
 interface LoginResponse {
@@ -13,7 +13,7 @@ interface LoginResponse {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [LucideArrowRight, LucideCircle, LucideDiamond, LucideEye, LucideEyeOff, LucideHistory, LucideLockKeyhole, LucideShieldCheck, LucideUserRound, LucideWorkflow, FormsModule, BrandComponent],
+  imports: [LucideArrowRight, LucideCircle, LucideDiamond, LucideEye, LucideEyeOff, LucideHistory, LucideLockKeyhole, LucideShieldCheck, LucideUserRound, LucideWorkflow, FormsModule, RouterLink, BrandComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -32,7 +32,7 @@ export class LoginComponent {
     this.submitted.set(true);
     this.feedback.set(null);
 
-    if (!this.username() || !this.password() || this.loading()) return;
+    if (!this.username() || this.password().length < 6 || this.loading()) return;
 
     this.loading.set(true);
     this.http
@@ -53,13 +53,23 @@ export class LoginComponent {
         error: (error: HttpErrorResponse) => {
           this.feedback.set({
             type: 'error',
-            text:
-              error.error?.message ??
-              error.error?.detail ??
-              'Não foi possível realizar o login. Verifique suas credenciais.',
+            text: this.errorMessage(error),
           });
           this.loading.set(false);
         },
       });
+  }
+
+  /**
+   * O backend retorna `detail` como string em erros de autenticação (401), mas como
+   * lista de objetos de validação do Pydantic em erros de schema (422) — sem essa
+   * checagem de tipo, o template renderiza a lista como "[object Object]".
+   */
+  private errorMessage(error: HttpErrorResponse): string {
+    if (typeof error.error?.message === 'string') return error.error.message;
+    if (typeof error.error?.detail === 'string') return error.error.detail;
+    if (error.status === 422) return 'Usuário ou senha em formato inválido. Verifique os dados informados.';
+    if (error.status === 0) return 'Não foi possível conectar ao servidor. Verifique sua conexão.';
+    return 'Não foi possível realizar o login. Verifique suas credenciais.';
   }
 }
