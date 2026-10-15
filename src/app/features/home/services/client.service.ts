@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map, shareReplay, switchMap } from 'rxjs';
-import { Client, Setor } from '../models/release.models';
+import { Client, ClienteCreate, ClienteUpdate, Setor } from '../models/release.models';
 import { authHeaders } from './auth-headers';
 import { ReferenceDataService } from './reference-data.service';
 
@@ -37,6 +37,40 @@ export class ClientService {
         return filtered.slice(skip, skip + limit);
       }),
     );
+  }
+
+  listAll(): Observable<Client[]> {
+    return this.allClients();
+  }
+
+  create(data: ClienteCreate): Observable<Client> {
+    return this.http.post<ClienteRaw>(this.url, data, { headers: authHeaders() }).pipe(
+      switchMap((raw) => this.referenceData.getSetores().pipe(map((setores) => this.toClient(raw, setores)))),
+      map((client) => {
+        this.invalidate();
+        return client;
+      }),
+    );
+  }
+
+  update(id: number, data: ClienteUpdate): Observable<Client> {
+    return this.http.put<ClienteRaw>(`${this.url}/${id}`, data, { headers: authHeaders() }).pipe(
+      switchMap((raw) => this.referenceData.getSetores().pipe(map((setores) => this.toClient(raw, setores)))),
+      map((client) => {
+        this.invalidate();
+        return client;
+      }),
+    );
+  }
+
+  remove(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${id}`, { headers: authHeaders() }).pipe(
+      map(() => this.invalidate()),
+    );
+  }
+
+  private invalidate(): void {
+    this.clients$ = undefined;
   }
 
   private allClients(): Observable<Client[]> {

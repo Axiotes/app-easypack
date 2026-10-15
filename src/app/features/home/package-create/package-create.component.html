@@ -1,9 +1,7 @@
 <div class="home-shell">
   <app-header [user]="loggedUser()" />
   <div class="workspace">
-    <nav class="navigation" aria-label="Navegação principal">
-      <a class="active" routerLink="/home" queryParamsHandling="preserve"><svg lucideBuilding2 size="14" aria-hidden="true"></svg><span>Clientes</span></a>
-    </nav>
+    <app-main-nav active="pacotes" [user]="loggedUser()" />
     <main class="content" [attr.aria-busy]="loading() || saving()">
       <div class="breadcrumb">Início <svg lucideChevronRight size="12" class="breadcrumb-icon" aria-hidden="true"></svg>
         <a routerLink="/home" queryParamsHandling="preserve">Clientes</a>

@@ -4,8 +4,9 @@ import { Component, DestroyRef, PLATFORM_ID, inject, signal } from '@angular/cor
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { LucideArrowLeft, LucideBuilding2, LucideChevronRight, LucidePackage, LucideSave } from '@lucide/angular';
+import { LucideArrowLeft, LucideChevronRight, LucidePackage, LucideSave } from '@lucide/angular';
 import { finalize, forkJoin } from 'rxjs';
+import { MainNavComponent } from '../../../shared/components/main-nav/main-nav.component';
 import { AppHeaderComponent } from '../components/app-header/app-header.component';
 import { Client, LoggedUser, Product, YesNo } from '../models/release.models';
 import { ClientService } from '../services/client.service';
@@ -17,10 +18,10 @@ const integerCode: ValidatorFn = (control) => control.value === null || Number.i
 @Component({
   selector: 'app-package-create',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, AppHeaderComponent, LucideArrowLeft,
-    LucideBuilding2, LucideChevronRight, LucidePackage, LucideSave],
+  imports: [ReactiveFormsModule, RouterLink, AppHeaderComponent, MainNavComponent, LucideArrowLeft,
+    LucideChevronRight, LucidePackage, LucideSave],
   templateUrl: './package-create.component.html',
-  styleUrls: ['../home.component.scss', './package-create.component.scss'],
+  styleUrls: ['../home.component.scss', '../../../shared/styles/form-page.scss', './package-create.component.scss'],
 })
 export class PackageCreateComponent {
   private readonly service = inject(PackageService);

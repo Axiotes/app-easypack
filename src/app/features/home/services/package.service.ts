@@ -113,6 +113,28 @@ export class PackageService {
     return this.referenceData.getProdutos();
   }
 
+  aprovarCorrecao(idCorrecao: number): Observable<void> {
+    return this.http
+      .post(`${BASE}/correcoes/${idCorrecao}/aprovar`, {}, { headers: authHeaders() })
+      .pipe(map(() => undefined));
+  }
+
+  aprovarGerente(idPacote: number): Observable<void> {
+    return this.http
+      .post(`${BASE}/pacotes/${idPacote}/aprovar-gerente`, {}, { headers: authHeaders() })
+      .pipe(map(() => undefined));
+  }
+
+  aplicar(idPacote: number, idUsuarioAprovadorPar: number | null): Observable<void> {
+    return this.http
+      .post(
+        `${BASE}/pacotes/${idPacote}/aplicar`,
+        { id_usuario_aprovador_par: idUsuarioAprovadorPar },
+        { headers: authHeaders() },
+      )
+      .pipe(map(() => undefined));
+  }
+
   /** Não existe `/pacotes/{id}/detalhes`; monta os detalhes juntando pacote + correção + referências. */
   getById(id: number): Observable<PackageDetails> {
     const headers = authHeaders();

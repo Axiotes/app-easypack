@@ -1,9 +1,7 @@
 <div class="home-shell">
   <app-header [user]="loggedUser()" />
   <div class="workspace">
-    <nav class="navigation" aria-label="Navegação principal">
-      <a class="active" routerLink="/home" queryParamsHandling="preserve"><svg lucideBuilding2 size="14" aria-hidden="true"></svg> <span>Clientes</span></a>
-    </nav>
+    <app-main-nav active="pacotes" [user]="loggedUser()" />
     <main class="content" [attr.aria-busy]="loading()">
       <div class="breadcrumb">
         Início <svg lucideChevronRight size="12" class="breadcrumb-icon" aria-hidden="true"></svg> <a routerLink="/home" queryParamsHandling="preserve">Clientes</a>
@@ -25,6 +23,46 @@
           <svg lucidePackage size="24" class="package-icon" aria-hidden="true"></svg>
           <div><h2>{{ item.nm_pacote }}</h2><p>{{ item.id_cliente }} · {{ item.id_produto }} · v{{ item.versao_correcao }}</p></div>
           <span class="badge" [class.badge--yes]="item.sn_aplicado === 'S'">{{ item.sn_aplicado === 'S' ? 'Aplicado' : 'Não aplicado' }}</span>
+        </section>
+        <section class="actions-panel" aria-label="Ações do pacote">
+          <h2>Ações</h2>
+          @if (actionError()) { <div class="feedback feedback--error" role="alert">{{ actionError() }}</div> }
+          @if (actionSuccess()) { <div class="feedback feedback--success" role="status">{{ actionSuccess() }}</div> }
+          <div class="actions">
+            @if (item.sn_aprovado_code_review !== 'S' && podeAprovarCorrecao()) {
+              <button type="button" class="action-btn" [disabled]="actionLoading()" (click)="aprovarCorrecao()">
+                Aprovar code review da correção
+              </button>
+            }
+            @if (item.sn_aprovado_gerente !== 'S' && isGerenteProjeto()) {
+              <button type="button" class="action-btn" [disabled]="actionLoading()" (click)="aprovarGerente()">
+                Aprovar pacote (Gerente de Projeto)
+              </button>
+            }
+            @if (item.sn_aplicado !== 'S') {
+              @if (item.sn_aprovado_gerente !== 'S') {
+                <p class="action-hint">Aguardando aprovação do Gerente de Projeto para poder aplicar o pacote.</p>
+              } @else {
+                @if (isEstagiario()) {
+                  <label class="filter filter--wide"
+                    ><span>Aprovador (mesmo subsetor, cargo mínimo Pleno)</span>
+                    <select [ngModel]="selectedApproverId()" (ngModelChange)="selectedApproverId.set($event)">
+                      <option [ngValue]="null">Selecione</option>
+                      @for (colega of aprovadoresDisponiveis(); track colega.id) {
+                        <option [ngValue]="colega.id">{{ colega.nm_completo }} ({{ colega.cargo }})</option>
+                      }
+                    </select></label
+                  >
+                }
+                <button type="button" class="action-btn action-btn--primary" [disabled]="actionLoading()" (click)="aplicar()">
+                  {{ actionLoading() ? 'Aplicando...' : 'Aplicar pacote' }}
+                </button>
+              }
+            }
+            @if (item.sn_aplicado === 'S' && item.sn_aprovado_gerente === 'S' && item.sn_aprovado_code_review === 'S') {
+              <p class="action-hint">Pacote totalmente aprovado e aplicado.</p>
+            }
+          </div>
         </section>
         <div class="detail-sections">
           @for (section of sections; track section.title) {

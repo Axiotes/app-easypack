@@ -1,9 +1,7 @@
 <div class="home-shell">
   <app-header [user]="loggedUser()" />
   <div class="workspace">
-    <nav class="navigation" aria-label="Navegação principal">
-      <a class="active"><svg lucideBuilding2 size="14" aria-hidden="true"></svg> <span>Clientes</span></a>
-    </nav>
+    <app-main-nav active="pacotes" [user]="loggedUser()" />
     <app-client-list
       [clients]="clients()"
       [selectedClientId]="selectedClient.id"

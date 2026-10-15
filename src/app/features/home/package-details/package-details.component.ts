@@ -1,13 +1,17 @@
-import { LucideArrowLeft, LucideBuilding2, LucideChevronRight, LucidePackage } from '@lucide/angular';
+import { LucideArrowLeft, LucideChevronRight, LucidePackage } from '@lucide/angular';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, DestroyRef, PLATFORM_ID, inject, signal } from '@angular/core';
+import { Component, DestroyRef, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { Observable, catchError, finalize, map, of, switchMap, tap } from 'rxjs';
+import { MainNavComponent } from '../../../shared/components/main-nav/main-nav.component';
+import { cargoAtLeast } from '../utils/cargo.util';
 import { AppHeaderComponent } from '../components/app-header/app-header.component';
-import { LoggedUser, PackageDetails } from '../models/release.models';
+import { LoggedUser, PackageDetails, UsuarioRaw } from '../models/release.models';
 import { PackageService } from '../services/package.service';
+import { ReferenceDataService } from '../services/reference-data.service';
 import { UserService } from '../services/user.service';
 
 interface DetailField {
@@ -19,7 +23,7 @@ interface DetailField {
 @Component({
   selector: 'app-package-details',
   standalone: true,
-  imports: [LucideArrowLeft, LucideBuilding2, LucideChevronRight, LucidePackage, RouterLink, AppHeaderComponent],
+  imports: [FormsModule, LucideArrowLeft, LucideChevronRight, LucidePackage, RouterLink, AppHeaderComponent, MainNavComponent],
   templateUrl: './package-details.component.html',
   styleUrls: ['../home.component.scss', './package-details.component.scss'],
 })
@@ -27,6 +31,7 @@ export class PackageDetailsComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly packageService = inject(PackageService);
   private readonly userService = inject(UserService);
+  private readonly referenceData = inject(ReferenceDataService);
   private readonly destroyRef = inject(DestroyRef);
   protected readonly details = signal<PackageDetails | null>(null);
   protected readonly loggedUser = signal<LoggedUser | null>(null);
@@ -60,12 +65,39 @@ export class PackageDetailsComponent {
     ] },
   ];
 
+  protected readonly actionLoading = signal(false);
+  protected readonly actionError = signal('');
+  protected readonly actionSuccess = signal('');
+  protected readonly cargos = signal<string[]>([]);
+  protected readonly colegas = signal<UsuarioRaw[]>([]);
+  protected readonly selectedApproverId = signal<number | null>(null);
+
+  protected readonly isEstagiario = computed(() => this.loggedUser()?.cargo === 'ESTAGIARIO');
+  protected readonly isGerenteProjeto = computed(() => this.loggedUser()?.cargo === 'GERENTE_PROJETO');
+  protected readonly podeAprovarCorrecao = computed(() => {
+    const user = this.loggedUser();
+    const item = this.details();
+    return !!user && !!item && user.sg_setor === 'FB' && user.nm_produto === item.id_produto;
+  });
+  protected readonly aprovadoresDisponiveis = computed(() => {
+    const user = this.loggedUser();
+    if (!user) return [];
+    return this.colegas().filter(
+      (colega) =>
+        colega.id !== user.id &&
+        colega.id_subsetor === user.id_subsetor &&
+        cargoAtLeast(this.cargos(), colega.cargo, 'PLENO'),
+    );
+  });
+
   constructor() {
     if (!isPlatformBrowser(inject(PLATFORM_ID))) return;
     this.userService.getCurrentUser().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (user) => this.loggedUser.set(user),
       error: () => this.loggedUser.set(null),
     });
+    this.referenceData.getCargos().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((cargos) => this.cargos.set(cargos));
+    this.referenceData.getUsuarios().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((usuarios) => this.colegas.set(usuarios));
     this.route.paramMap.pipe(
       map((params) => params.get('id') ?? ''),
       tap(() => {
@@ -98,5 +130,57 @@ export class PackageDetailsComponent {
     if (value === null || value === '') return 'Não informado';
     if (status) return value === 'S' ? 'Sim' : 'Não';
     return String(value);
+  }
+
+  protected aprovarCorrecao(): void {
+    const item = this.details();
+    if (!item || this.actionLoading()) return;
+    this.runAction(this.packageService.aprovarCorrecao(item.id_correcao));
+  }
+
+  protected aprovarGerente(): void {
+    const item = this.details();
+    if (!item || this.actionLoading()) return;
+    this.runAction(this.packageService.aprovarGerente(item.id));
+  }
+
+  protected aplicar(): void {
+    const item = this.details();
+    if (!item || this.actionLoading()) return;
+    if (this.isEstagiario() && this.selectedApproverId() === null) {
+      this.actionError.set('Selecione um colega do seu subsetor, com cargo mínimo Pleno, para aprovar a aplicação.');
+      return;
+    }
+    this.runAction(this.packageService.aplicar(item.id, this.selectedApproverId()));
+  }
+
+  private runAction(action: Observable<void>): void {
+    const item = this.details();
+    if (!item) return;
+    this.actionLoading.set(true);
+    this.actionError.set('');
+    this.actionSuccess.set('');
+    action
+      .pipe(
+        switchMap(() => this.packageService.getById(item.id)),
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.actionLoading.set(false)),
+      )
+      .subscribe({
+        next: (updated) => {
+          this.details.set(updated);
+          this.actionSuccess.set('Ação realizada com sucesso.');
+          this.selectedApproverId.set(null);
+        },
+        error: (error: HttpErrorResponse) => {
+          this.actionError.set(
+            error.status === 401
+              ? 'Sua sessão expirou. Entre novamente para continuar.'
+              : typeof error.error?.detail === 'string'
+                ? error.error.detail
+                : 'Não foi possível concluir a ação. Tente novamente.',
+          );
+        },
+      });
   }
 }

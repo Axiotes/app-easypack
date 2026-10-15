@@ -1,0 +1,74 @@
+<div class="home-shell">
+  <app-header [user]="loggedUser()" />
+  <div class="workspace">
+    <app-main-nav active="usuarios" [user]="loggedUser()" />
+    <main class="content" [attr.aria-busy]="loading()">
+      <div class="breadcrumb">
+        Início <svg lucideChevronRight size="12" class="breadcrumb-icon" aria-hidden="true"></svg> <b>Usuários</b>
+      </div>
+      <section class="page-heading">
+        <div>
+          <h1>Usuários</h1>
+          <p>Gestão de usuários do seu subsetor.</p>
+        </div>
+        @if (podeCadastrar()) {
+          <a class="new-package" routerLink="/usuarios/novo"><svg lucidePlus size="14" aria-hidden="true"></svg> Novo usuário</a>
+        }
+      </section>
+      @if (loading()) {
+        <div class="feedback" role="status">Carregando usuários...</div>
+      } @else if (error()) {
+        <div class="feedback feedback--error" role="alert">{{ error() }}</div>
+      } @else {
+        @if (deleteError()) {
+          <div class="feedback feedback--error" role="alert">{{ deleteError() }}</div>
+        }
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Usuário</th>
+              <th>Nome completo</th>
+              <th>Cargo</th>
+              <th>Subsetor</th>
+              <th>Produto</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (usuario of usuarios(); track usuario.id) {
+              <tr>
+                <td>{{ usuario.nm_usuario }}</td>
+                <td>{{ usuario.nm_completo }}</td>
+                <td>{{ usuario.cargo }}</td>
+                <td>{{ nomeSubsetor(usuario.id_subsetor) }}</td>
+                <td>{{ nomeProduto(usuario.id_produto) }}</td>
+                <td class="data-table__actions">
+                  @if (podeGerenciar(usuario)) {
+                    @if (confirmingId() === usuario.id) {
+                      <span class="confirm"
+                        >Excluir?
+                        <button type="button" class="link-btn" [disabled]="deletingId() === usuario.id" (click)="excluir(usuario.id)">Sim</button>
+                        <button type="button" class="link-btn" (click)="cancelarExclusao()">Não</button>
+                      </span>
+                    } @else {
+                      <a [routerLink]="['/usuarios', usuario.id, 'editar']" class="icon-btn" aria-label="Editar usuário"
+                        ><svg lucidePencil size="14" aria-hidden="true"></svg
+                      ></a>
+                      <button type="button" class="icon-btn" aria-label="Excluir usuário" (click)="confirmarExclusao(usuario.id)">
+                        <svg lucideTrash2 size="14" aria-hidden="true"></svg>
+                      </button>
+                    }
+                  }
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6" class="empty">Nenhum usuário encontrado.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </main>
+  </div>
+</div>

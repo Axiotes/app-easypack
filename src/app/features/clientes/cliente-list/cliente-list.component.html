@@ -1,0 +1,70 @@
+<div class="home-shell">
+  <app-header [user]="loggedUser()" />
+  <div class="workspace">
+    <app-main-nav active="clientes" [user]="loggedUser()" />
+    <main class="content" [attr.aria-busy]="loading()">
+      <div class="breadcrumb">
+        Início <svg lucideChevronRight size="12" class="breadcrumb-icon" aria-hidden="true"></svg> <b>Gestão de clientes</b>
+      </div>
+      <section class="page-heading">
+        <div>
+          <h1>Gestão de clientes</h1>
+          <p>Cadastro de clientes, restrito ao coordenador do subsetor Gerência.</p>
+        </div>
+        @if (podeGerenciar()) {
+          <a class="new-package" routerLink="/clientes/novo"><svg lucidePlus size="14" aria-hidden="true"></svg> Novo cliente</a>
+        }
+      </section>
+      @if (loading()) {
+        <div class="feedback" role="status">Carregando clientes...</div>
+      } @else if (error()) {
+        <div class="feedback feedback--error" role="alert">{{ error() }}</div>
+      } @else {
+        @if (deleteError()) {
+          <div class="feedback feedback--error" role="alert">{{ deleteError() }}</div>
+        }
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Setor de atendimento</th>
+              <th>Responsável</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (cliente of clientes(); track cliente.id) {
+              <tr>
+                <td>{{ cliente.nm_cliente }}</td>
+                <td>{{ cliente.setor_atendimento }}</td>
+                <td>{{ nomeResponsavel(cliente.id_usuario) }}</td>
+                <td class="data-table__actions">
+                  @if (podeGerenciar()) {
+                    @if (confirmingId() === cliente.id) {
+                      <span class="confirm"
+                        >Excluir?
+                        <button type="button" class="link-btn" [disabled]="deletingId() === cliente.id" (click)="excluir(cliente.id)">Sim</button>
+                        <button type="button" class="link-btn" (click)="cancelarExclusao()">Não</button>
+                      </span>
+                    } @else {
+                      <a [routerLink]="['/clientes', cliente.id, 'editar']" class="icon-btn" aria-label="Editar cliente"
+                        ><svg lucidePencil size="14" aria-hidden="true"></svg
+                      ></a>
+                      <button type="button" class="icon-btn" aria-label="Excluir cliente" (click)="confirmarExclusao(cliente.id)">
+                        <svg lucideTrash2 size="14" aria-hidden="true"></svg>
+                      </button>
+                    }
+                  }
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="4" class="empty">Nenhum cliente encontrado.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </main>
+  </div>
+</div>

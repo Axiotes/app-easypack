@@ -71,8 +71,50 @@ export interface LoggedUser {
   nm_usuario: string;
   nm_completo: string;
   cargo: string;
+  id_subsetor: number;
   nm_subsetor: string;
+  sn_gerencia: YesNo;
+  sg_setor: string;
+  id_produto: number;
   nm_produto: string;
+}
+
+export interface Usuario {
+  id: number;
+  nm_usuario: string;
+  nm_completo: string;
+  cargo: string;
+  id_subsetor: number;
+  id_produto: number;
+}
+
+export interface UsuarioCreate {
+  nm_usuario: string;
+  nm_completo: string;
+  senha: string;
+  cargo: string;
+  id_subsetor: number;
+  id_produto: number;
+}
+
+export interface UsuarioUpdate {
+  nm_usuario?: string;
+  nm_completo?: string;
+  senha?: string;
+  cargo?: string;
+  id_produto?: number;
+}
+
+export interface ClienteCreate {
+  nm_cliente: string;
+  id_setor_atendimento: number;
+  id_usuario: number;
+}
+
+export interface ClienteUpdate {
+  nm_cliente?: string;
+  id_setor_atendimento?: number;
+  id_usuario?: number;
 }
 
 // Matches PacoteCompletoRead: references other than package/correction IDs are names.

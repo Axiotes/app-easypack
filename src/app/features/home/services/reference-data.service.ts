@@ -20,6 +20,7 @@ export class ReferenceDataService {
   private setores$?: Observable<Setor[]>;
   private subsetores$?: Observable<Subsetor[]>;
   private usuarios$?: Observable<UsuarioRaw[]>;
+  private cargos$?: Observable<string[]>;
 
   getProdutos(): Observable<Product[]> {
     this.produtos$ ??= this.http
@@ -47,5 +48,18 @@ export class ReferenceDataService {
       .get<UsuarioRaw[]>(`${BASE}/usuarios`, { headers: authHeaders() })
       .pipe(shareReplay(1));
     return this.usuarios$;
+  }
+
+  /** Ordem do mais sênior ao mais júnior (GERENTE_PROJETO primeiro). */
+  getCargos(): Observable<string[]> {
+    this.cargos$ ??= this.http
+      .get<string[]>(`${BASE}/cargos`, { headers: authHeaders() })
+      .pipe(shareReplay(1));
+    return this.cargos$;
+  }
+
+  /** Limpa os caches: usar após criar/editar/remover usuário ou cliente. */
+  invalidateUsuarios(): void {
+    this.usuarios$ = undefined;
   }
 }
