@@ -34,6 +34,17 @@
                 Aprovar code review da correção
               </button>
             }
+            @if (podeAlterarMergeado()) {
+              @if (item.sn_mergeado !== 'S') {
+                <button type="button" class="action-btn" [disabled]="actionLoading()" (click)="alterarMergeado('S')">
+                  Marcar correção como mergeada
+                </button>
+              } @else {
+                <button type="button" class="action-btn" [disabled]="actionLoading()" (click)="alterarMergeado('N')">
+                  Desmarcar merge da correção
+                </button>
+              }
+            }
             @if (item.sn_aprovado_gerente !== 'S' && isGerenteProjeto()) {
               <button type="button" class="action-btn" [disabled]="actionLoading()" (click)="aprovarGerente()">
                 Aprovar pacote (Gerente de Projeto)
@@ -45,7 +56,7 @@
               } @else {
                 @if (isEstagiario()) {
                   <label class="filter filter--wide"
-                    ><span>Aprovador (mesmo subsetor, cargo mínimo Pleno)</span>
+                    ><span>Aprovador (mesmo subsetor; Pleno, Senior, Especialista ou Coordenador)</span>
                     <select [ngModel]="selectedApproverId()" (ngModelChange)="selectedApproverId.set($event)">
                       <option [ngValue]="null">Selecione</option>
                       @for (colega of aprovadoresDisponiveis(); track colega.id) {

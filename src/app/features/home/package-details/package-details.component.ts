@@ -7,9 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable, catchError, finalize, map, of, switchMap, tap } from 'rxjs';
 import { MainNavComponent } from '../../../shared/components/main-nav/main-nav.component';
-import { cargoAtLeast } from '../utils/cargo.util';
 import { AppHeaderComponent } from '../components/app-header/app-header.component';
-import { LoggedUser, PackageDetails, UsuarioRaw } from '../models/release.models';
+import { LoggedUser, PackageDetails, UsuarioRaw, YesNo } from '../models/release.models';
 import { PackageService } from '../services/package.service';
 import { ReferenceDataService } from '../services/reference-data.service';
 import { UserService } from '../services/user.service';
@@ -19,6 +18,10 @@ interface DetailField {
   label: string;
   status?: boolean;
 }
+
+/** Espelha app/core/cargo.py no backend. */
+const CARGOS_APROVACAO_CODE_REVIEW = ['ESPECIALISTA', 'SENIOR', 'PLENO', 'JUNIOR'];
+const CARGOS_APROVADOR_PAR_ESTAGIARIO = ['COORDENADOR', 'ESPECIALISTA', 'SENIOR', 'PLENO'];
 
 @Component({
   selector: 'app-package-details',
@@ -41,7 +44,7 @@ export class PackageDetailsComponent {
     { title: 'Dados do pacote', fields: [
       { key: 'id', label: 'ID do pacote' },
       { key: 'nm_pacote', label: 'Nome do pacote' },
-      { key: 'tp_pacote', label: 'Tipo do pacote (código)' },
+      { key: 'nm_tipo_pacote', label: 'Tipo do pacote' },
       { key: 'sn_aplicado', label: 'Aplicado', status: true },
       { key: 'sn_aprovado_usu', label: 'Aprovação do usuário', status: true },
       { key: 'sn_aprovado_gerente', label: 'Aprovação do gerente de projeto', status: true },
@@ -77,7 +80,18 @@ export class PackageDetailsComponent {
   protected readonly podeAprovarCorrecao = computed(() => {
     const user = this.loggedUser();
     const item = this.details();
-    return !!user && !!item && user.sg_setor === 'FB' && user.nm_produto === item.id_produto;
+    return (
+      !!user &&
+      !!item &&
+      user.sg_setor === 'FB' &&
+      user.nm_produto === item.id_produto &&
+      CARGOS_APROVACAO_CODE_REVIEW.includes(user.cargo)
+    );
+  });
+  protected readonly podeAlterarMergeado = computed(() => {
+    const user = this.loggedUser();
+    const item = this.details();
+    return !!user && !!item && user.sg_setor === item.sg_setor_correcao;
   });
   protected readonly aprovadoresDisponiveis = computed(() => {
     const user = this.loggedUser();
@@ -86,7 +100,7 @@ export class PackageDetailsComponent {
       (colega) =>
         colega.id !== user.id &&
         colega.id_subsetor === user.id_subsetor &&
-        cargoAtLeast(this.cargos(), colega.cargo, 'PLENO'),
+        CARGOS_APROVADOR_PAR_ESTAGIARIO.includes(colega.cargo),
     );
   });
 
@@ -136,6 +150,12 @@ export class PackageDetailsComponent {
     const item = this.details();
     if (!item || this.actionLoading()) return;
     this.runAction(this.packageService.aprovarCorrecao(item.id_correcao));
+  }
+
+  protected alterarMergeado(novoValor: YesNo): void {
+    const item = this.details();
+    if (!item || this.actionLoading()) return;
+    this.runAction(this.packageService.alterarMergeado(item.id_correcao, novoValor));
   }
 
   protected aprovarGerente(): void {

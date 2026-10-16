@@ -10,6 +10,7 @@ import {
   PackageFilters,
   ReleasePackage,
   Setor,
+  TipoPacote,
   UsuarioRaw,
   YesNo,
 } from '../models/release.models';
@@ -135,6 +136,12 @@ export class PackageService {
       .pipe(map(() => undefined));
   }
 
+  alterarMergeado(idCorrecao: number, sn_mergeado: YesNo): Observable<void> {
+    return this.http
+      .post(`${BASE}/correcoes/${idCorrecao}/merge`, { sn_mergeado }, { headers: authHeaders() })
+      .pipe(map(() => undefined));
+  }
+
   /** Não existe `/pacotes/{id}/detalhes`; monta os detalhes juntando pacote + correção + referências. */
   getById(id: number): Observable<PackageDetails> {
     const headers = authHeaders();
@@ -147,9 +154,10 @@ export class PackageService {
               produtos: this.referenceData.getProdutos(),
               setores: this.referenceData.getSetores(),
               usuarios: this.referenceData.getUsuarios(),
+              tiposPacote: this.referenceData.getTiposPacote(),
             }).pipe(
-              map(({ cliente, produtos, setores, usuarios }) =>
-                this.toPackageDetails(pacote, correcao, cliente, produtos, setores, usuarios),
+              map(({ cliente, produtos, setores, usuarios, tiposPacote }) =>
+                this.toPackageDetails(pacote, correcao, cliente, produtos, setores, usuarios, tiposPacote),
               ),
             ),
           ),
@@ -240,16 +248,19 @@ export class PackageService {
     produtos: Product[],
     setores: Setor[],
     usuarios: UsuarioRaw[],
+    tiposPacote: TipoPacote[],
   ): PackageDetails {
     const nomeUsuario = (idUsuario: number | null): string | null =>
       idUsuario === null
         ? null
         : (usuarios.find((usuario) => usuario.id === idUsuario)?.nm_completo ?? `Usuário #${idUsuario}`);
+    const setor = setores.find((item) => item.id === correcao.id_setor);
 
     return {
       id: pacote.id,
       id_correcao: pacote.id_correcao,
       tp_pacote: pacote.tp_pacote,
+      nm_tipo_pacote: tiposPacote.find((item) => item.id === pacote.tp_pacote)?.nm_tipo ?? `Tipo #${pacote.tp_pacote}`,
       nm_pacote: pacote.nm_pacote,
       sn_aplicado: pacote.sn_aplicado,
       sn_aprovado_usu: pacote.sn_aprovado_usu,
@@ -263,7 +274,8 @@ export class PackageService {
       id_cliente: cliente.nm_cliente,
       id_produto: produtos.find((item) => item.id === correcao.id_produto)?.nm_produto ?? `Produto #${correcao.id_produto}`,
       id_usuario: nomeUsuario(correcao.id_usuario) ?? `Usuário #${correcao.id_usuario}`,
-      id_setor: setores.find((item) => item.id === correcao.id_setor)?.nm_setor ?? `Setor #${correcao.id_setor}`,
+      id_setor: setor?.nm_setor ?? `Setor #${correcao.id_setor}`,
+      sg_setor_correcao: setor?.sg_setor ?? '',
       sn_mergeado: correcao.sn_mergeado,
       versao_correcao: correcao.versao_correcao,
       sn_aprovado_code_review: correcao.sn_aprovado_code_review,

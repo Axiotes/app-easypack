@@ -34,9 +34,7 @@ export class ClienteListComponent {
   protected readonly confirmingId = signal<number | null>(null);
   protected readonly deleteError = signal('');
 
-  protected readonly podeGerenciar = computed(
-    () => this.loggedUser()?.cargo === 'COORDENADOR' && this.loggedUser()?.sn_gerencia === 'S',
-  );
+  protected readonly podeGerenciar = computed(() => this.loggedUser()?.cargo === 'GERENTE_PROJETO');
 
   constructor() {
     if (!isPlatformBrowser(inject(PLATFORM_ID))) return;

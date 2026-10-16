@@ -66,8 +66,8 @@ export class ClienteFormComponent {
       .subscribe({
         next: ({ user, setores, usuarios, cliente }) => {
           this.loggedUser.set(user);
-          if (user.cargo !== 'COORDENADOR' || user.sn_gerencia !== 'S') {
-            this.loadError.set('Apenas um coordenador do subsetor Gerência pode gerenciar clientes.');
+          if (user.cargo !== 'GERENTE_PROJETO') {
+            this.loadError.set('Apenas um Gerente de Projeto pode gerenciar clientes.');
             return;
           }
           this.setores.set(setores);

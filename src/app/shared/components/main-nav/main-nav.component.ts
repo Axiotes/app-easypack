@@ -20,7 +20,5 @@ export class MainNavComponent {
 
   protected readonly userSignal = signal<LoggedUser | null>(null);
   protected readonly canManageUsuarios = computed(() => this.userSignal()?.cargo === 'COORDENADOR');
-  protected readonly canManageClientes = computed(
-    () => this.userSignal()?.cargo === 'COORDENADOR' && this.userSignal()?.sn_gerencia === 'S',
-  );
+  protected readonly canManageClientes = computed(() => this.userSignal()?.cargo === 'GERENTE_PROJETO');
 }

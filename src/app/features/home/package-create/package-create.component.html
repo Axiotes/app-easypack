@@ -28,12 +28,15 @@
                 <label class="wide">Nome do pacote *<input formControlName="nm_pacote" maxlength="255" placeholder="Ex.: pep-core-v3.4.1.jar" [attr.aria-invalid]="invalid('nm_pacote')" />
                   @if (invalid('nm_pacote')) { <small class="validation">Informe o nome do pacote (até 255 caracteres).</small> }
                 </label>
-                <label>Tipo do pacote (código) *<input type="number" step="1" formControlName="tp_pacote" placeholder="Informe o código" [attr.aria-invalid]="invalid('tp_pacote')" />
-                  @if (invalid('tp_pacote')) { <small class="validation">Informe um código inteiro.</small> }
-                </label>
                 <label>Produto *<select formControlName="id_produto" [attr.aria-invalid]="invalid('id_produto')"><option [ngValue]="null">Selecione</option>
                   @for (product of products(); track product.id) { <option [ngValue]="product.id">{{ product.nm_produto }}</option> }
                 </select>@if (invalid('id_produto')) { <small class="validation">Selecione o produto.</small> }</label>
+                <label>Tipo do pacote *<select formControlName="tp_pacote" [attr.aria-invalid]="invalid('tp_pacote')"><option [ngValue]="null">Selecione</option>
+                  @for (tipo of tiposDisponiveis(); track tipo.id) { <option [ngValue]="tipo.id">{{ tipo.nm_tipo }}</option> }
+                </select>
+                  @if (invalid('tp_pacote')) { <small class="validation">Selecione o tipo do pacote.</small> }
+                  @if (!tiposDisponiveis().length) { <small class="validation">Selecione um produto para ver os tipos disponíveis.</small> }
+                </label>
               </div>
               <div class="note"><strong>Aprovações pendentes</strong><p>O pacote será cadastrado como não aplicado e aguardará as aprovações necessárias.</p></div>
             </section>

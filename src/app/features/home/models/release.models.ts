@@ -28,7 +28,7 @@ export interface UsuarioRaw {
   nm_completo: string;
   cargo: string;
   id_subsetor: number;
-  id_produto: number;
+  id_produto: number | null;
 }
 
 export interface ReleasePackage {
@@ -75,7 +75,7 @@ export interface LoggedUser {
   nm_subsetor: string;
   sn_gerencia: YesNo;
   sg_setor: string;
-  id_produto: number;
+  id_produto: number | null;
   nm_produto: string;
 }
 
@@ -85,7 +85,7 @@ export interface Usuario {
   nm_completo: string;
   cargo: string;
   id_subsetor: number;
-  id_produto: number;
+  id_produto: number | null;
 }
 
 export interface UsuarioCreate {
@@ -94,7 +94,7 @@ export interface UsuarioCreate {
   senha: string;
   cargo: string;
   id_subsetor: number;
-  id_produto: number;
+  id_produto: number | null;
 }
 
 export interface UsuarioUpdate {
@@ -102,7 +102,7 @@ export interface UsuarioUpdate {
   nm_completo?: string;
   senha?: string;
   cargo?: string;
-  id_produto?: number;
+  id_produto?: number | null;
 }
 
 export interface ClienteCreate {
@@ -122,6 +122,7 @@ export interface PackageDetails {
   id: number;
   id_correcao: number;
   tp_pacote: number;
+  nm_tipo_pacote: string;
   nm_pacote: string;
   sn_aplicado: YesNo;
   sn_aprovado_usu: YesNo | null;
@@ -136,6 +137,7 @@ export interface PackageDetails {
   id_produto: string;
   id_usuario: string;
   id_setor: string;
+  sg_setor_correcao: string;
   sn_mergeado: YesNo | null;
   versao_correcao: string;
   sn_aprovado_code_review: YesNo;
@@ -145,6 +147,13 @@ export interface PackageDetails {
 export interface Product {
   id: number;
   nm_produto: string;
+  nm_grupo_tipo_pacote: string;
+}
+
+export interface TipoPacote {
+  id: number;
+  nm_tipo: string;
+  nm_grupo: string;
 }
 
 export interface CreatePackage {

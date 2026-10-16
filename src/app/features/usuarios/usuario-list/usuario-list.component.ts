@@ -75,7 +75,8 @@ export class UsuarioListComponent {
     return this.subsetores().find((item) => item.id === id)?.nm_subsetor ?? `Subsetor #${id}`;
   }
 
-  protected nomeProduto(id: number): string {
+  protected nomeProduto(id: number | null): string {
+    if (id === null) return 'Não se aplica';
     return this.produtos().find((item) => item.id === id)?.nm_produto ?? `Produto #${id}`;
   }
 

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, shareReplay } from 'rxjs';
-import { Product, Setor, Subsetor, UsuarioRaw } from '../models/release.models';
+import { Product, Setor, Subsetor, TipoPacote, UsuarioRaw } from '../models/release.models';
 import { authHeaders } from './auth-headers';
 
 const BASE = 'http://localhost:8000/api/v1';
@@ -21,6 +21,7 @@ export class ReferenceDataService {
   private subsetores$?: Observable<Subsetor[]>;
   private usuarios$?: Observable<UsuarioRaw[]>;
   private cargos$?: Observable<string[]>;
+  private tiposPacote$?: Observable<TipoPacote[]>;
 
   getProdutos(): Observable<Product[]> {
     this.produtos$ ??= this.http
@@ -56,6 +57,14 @@ export class ReferenceDataService {
       .get<string[]>(`${BASE}/cargos`, { headers: authHeaders() })
       .pipe(shareReplay(1));
     return this.cargos$;
+  }
+
+  /** Grupo FORMS_REPORTS (Soul/Pagu) ou FRONT_BACK (PEP/Portaria/SACR) — ver `Produto.nm_grupo_tipo_pacote`. */
+  getTiposPacote(): Observable<TipoPacote[]> {
+    this.tiposPacote$ ??= this.http
+      .get<TipoPacote[]>(`${BASE}/tipos-pacote`, { headers: authHeaders() })
+      .pipe(shareReplay(1));
+    return this.tiposPacote$;
   }
 
   /** Limpa os caches: usar após criar/editar/remover usuário ou cliente. */
