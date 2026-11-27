@@ -1,0 +1,77 @@
+<div class="home-shell">
+  <app-header [user]="loggedUser()" />
+  <div class="workspace">
+    <app-main-nav active="usuarios" [user]="loggedUser()" />
+    <main class="content" [attr.aria-busy]="loading() || saving()">
+      <div class="breadcrumb">
+        Início <svg lucideChevronRight size="12" class="breadcrumb-icon" aria-hidden="true"></svg>
+        <a routerLink="/usuarios">Usuários</a>
+        <svg lucideChevronRight size="12" class="breadcrumb-icon" aria-hidden="true"></svg>
+        <b>{{ isEdit() ? 'Editar usuário' : 'Novo usuário' }}</b>
+      </div>
+      <section class="page-heading">
+        <div>
+          <h1>{{ isEdit() ? 'Editar usuário' : 'Novo usuário' }}</h1>
+          <p>Usuários cadastrados aqui pertencem ao seu próprio subsetor.</p>
+        </div>
+        <a class="back-link" routerLink="/usuarios"><svg lucideArrowLeft size="14" aria-hidden="true"></svg> Voltar</a>
+      </section>
+      @if (loading()) {
+        <div class="feedback" role="status">Carregando dados do cadastro...</div>
+      } @else if (loadError()) {
+        <div class="feedback feedback--error" role="alert">{{ loadError() }}</div>
+      } @else {
+        <section class="client-summary" aria-label="Subsetor do usuário">
+          <svg lucideUserCog size="24" aria-hidden="true"></svg>
+          <div>
+            <h2>{{ loggedUser()?.nm_subsetor }}</h2>
+            <p>Seu subsetor · usuários cadastrados aqui ficam vinculados a ele automaticamente.</p>
+          </div>
+        </section>
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+          <div class="form-panels">
+            <section class="form-panel" aria-labelledby="usuario-heading">
+              <h2 id="usuario-heading">Dados do usuário</h2>
+              <div class="fields">
+                <label>Nome de usuário (login) *
+                  <input formControlName="nm_usuario" maxlength="100" placeholder="Ex.: maria.silva" [attr.aria-invalid]="invalid('nm_usuario')" />
+                  @if (invalid('nm_usuario')) { <small class="validation">Informe o nome de usuário (3 a 100 caracteres).</small> }
+                </label>
+                <label class="wide">Nome completo *
+                  <input formControlName="nm_completo" maxlength="255" placeholder="Ex.: Maria da Silva" [attr.aria-invalid]="invalid('nm_completo')" />
+                  @if (invalid('nm_completo')) { <small class="validation">Informe o nome completo (3 a 255 caracteres).</small> }
+                </label>
+                <label>{{ isEdit() ? 'Nova senha (opcional)' : 'Senha *' }}
+                  <input type="password" formControlName="senha" maxlength="100" placeholder="Mínimo 6 caracteres" [attr.aria-invalid]="invalid('senha')" />
+                  @if (invalid('senha')) { <small class="validation">A senha deve ter entre 6 e 100 caracteres.</small> }
+                </label>
+                <label>Cargo *
+                  <select formControlName="cargo" [attr.aria-invalid]="invalid('cargo')">
+                    <option [ngValue]="null">Selecione</option>
+                    @for (cargo of cargosDisponiveis(); track cargo) { <option [ngValue]="cargo">{{ cargo }}</option> }
+                  </select>
+                  @if (invalid('cargo')) { <small class="validation">Selecione o cargo.</small> }
+                </label>
+                <label>Produto *
+                  <select formControlName="id_produto" [attr.aria-invalid]="invalid('id_produto')">
+                    <option [ngValue]="null">Selecione</option>
+                    @for (produto of produtos(); track produto.id) { <option [ngValue]="produto.id">{{ produto.nm_produto }}</option> }
+                  </select>
+                  @if (invalid('id_produto')) { <small class="validation">Selecione o produto.</small> }
+                </label>
+              </div>
+            </section>
+          </div>
+          @if (saveError()) { <div class="feedback feedback--error" role="alert">{{ saveError() }}</div> }
+          <div class="form-actions">
+            <small>* Campos obrigatórios</small>
+            <a class="back-link" routerLink="/usuarios">Cancelar</a>
+            <button class="new-package" type="submit" [disabled]="saving()">
+              <svg lucideSave size="14" aria-hidden="true"></svg>{{ saving() ? 'Salvando...' : 'Salvar usuário' }}
+            </button>
+          </div>
+        </form>
+      }
+    </main>
+  </div>
+</div>

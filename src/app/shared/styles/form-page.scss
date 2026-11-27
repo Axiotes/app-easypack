@@ -1,0 +1,29 @@
+a { color: #91a7c9; text-decoration: none; }
+.back-link { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #29415e; border-radius: 5px; padding: 8px 12px; font-size: 11px; }
+.page-heading { gap: 12px; }
+.client-summary { display: flex; align-items: center; gap: 12px; margin: 16px 0; padding: 16px; background: #0d182b; border: 1px solid #1d3455; border-radius: 6px; }
+.client-summary svg { color: #5385fb; }
+.client-summary h2 { font-size: 13px; margin: 0; }
+.client-summary p { color: #7c92b6; font-size: 11px; margin: 6px 0 0; }
+.form-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-panel { min-width: 0; background: #0e192a; border: 1px solid #1d2e49; border-radius: 6px; }
+.form-panel h2 { color: #91a7c9; font: 600 11px ui-monospace, monospace; margin: 0; padding: 14px 16px; border-bottom: 1px solid #22314a; }
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px; }
+label { display: flex; flex-direction: column; gap: 7px; color: #91a7c9; font-size: 11px; min-width: 0; }
+.wide { grid-column: 1 / -1; }
+input, select { width: 100%; min-width: 0; background: #101d31; border: 1px solid #263957; border-radius: 4px; color: #dce7fa; font-family: inherit; font-size: 12px; padding: 10px; }
+input::placeholder { color: #7184a2; }
+input[aria-invalid="true"], select[aria-invalid="true"] { border-color: #d66b77; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid #5385fb; outline-offset: 2px; }
+.validation { color: #efb0b0; font-size: 10px; }
+.note { color: #7c92b6; font-size: 11px; margin: 0 16px 16px; padding: 12px; background: #101d31; border-radius: 4px; line-height: 1.6; }
+.note strong { color: #b9c9e2; font-weight: 500; }
+.note p { margin: 4px 0 0; }
+.form-actions { display: flex; align-items: center; gap: 10px; margin-top: 16px; }
+.form-actions small { margin-right: auto; color: #7184a2; font-size: 10px; }
+button:disabled { opacity: .6; cursor: default; }
+.feedback { border: 1px solid #29415e; background: #0e192a; border-radius: 6px; padding: 20px; margin-top: 16px; color: #91a7c9; font-size: 12px; }
+.feedback--error { color: #efb0b0; }
+.feedback button { background: transparent; color: #91a7c9; border: 1px solid #29415e; border-radius: 4px; padding: 6px; margin-left: 8px; cursor: pointer; }
+@media (max-width: 1000px) { .form-panels { grid-template-columns: 1fr; } }
+@media (max-width: 500px) { .fields { grid-template-columns: 1fr; } .page-heading, .form-actions { align-items: flex-start; flex-direction: column; } }

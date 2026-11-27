@@ -1,0 +1,51 @@
+<main class="login-page">
+  <section class="intro" aria-label="Apresentação do EasyPack">
+    <div class="intro__topbar"><app-brand /><span class="environment"><svg lucideCircle size="6" class="environment-dot" aria-hidden="true"></svg> Produção</span></div>
+    <div class="intro__content">
+      <p class="eyebrow"><svg lucideDiamond size="9" class="eyebrow-icon" aria-hidden="true"></svg> GOVERNANÇA DE RELEASES</p>
+      <h1>Implantações seguras,<br /><em>controle total.</em></h1>
+      <p class="intro__description">Centralize a gestão de pacotes e correções dos seus clientes com rastreabilidade em cada etapa.</p>
+      <div class="guardrails">
+        <div class="guardrail"><span class="guardrail__icon guardrail__icon--blue"><svg lucideWorkflow size="16" aria-hidden="true"></svg></span><div><strong>Fluxo controlado</strong><small>Aprovações antes da aplicação</small></div></div>
+        <div class="guardrail"><span class="guardrail__icon guardrail__icon--green"><svg lucideShieldCheck size="16" aria-hidden="true"></svg></span><div><strong>Permissões por perfil</strong><small>Acesso conforme setor e produto</small></div></div>
+        <div class="guardrail"><span class="guardrail__icon guardrail__icon--purple"><svg lucideHistory size="16" aria-hidden="true"></svg></span><div><strong>Rastreabilidade completa</strong><small>Histórico de cada alteração</small></div></div>
+      </div>
+    </div>
+    <footer>© 2026 EasyPack <span></span> Plataforma de gestão de releases</footer>
+  </section>
+  <section class="access" aria-labelledby="recuperar-title">
+    <div class="access__content">
+      <div class="mobile-brand"><app-brand /></div>
+      <div class="access__heading">
+        <p class="eyebrow">ACESSO RESTRITO</p>
+        <h2 id="recuperar-title">Esqueceu sua senha?</h2>
+        <p>Por segurança, a redefinição não é feita pelo próprio usuário.</p>
+      </div>
+      <div class="recovery-steps">
+        <div class="recovery-step">
+          <span class="recovery-step__icon"><svg lucideUserCog size="16" aria-hidden="true"></svg></span>
+          <div>
+            <strong>Fale com o coordenador do seu subsetor</strong>
+            <p>Apenas um usuário com cargo Coordenador consegue redefinir senhas, e somente para quem está no mesmo subsetor.</p>
+          </div>
+        </div>
+        <div class="recovery-step">
+          <span class="recovery-step__icon">2</span>
+          <div>
+            <strong>Ele acessa Usuários → seu nome → Editar</strong>
+            <p>No formulário de edição existe o campo "Nova senha (opcional)", usado só quando uma redefinição é necessária.</p>
+          </div>
+        </div>
+        <div class="recovery-step">
+          <span class="recovery-step__icon">3</span>
+          <div>
+            <strong>Você recebe a nova senha e entra normalmente</strong>
+            <p>Assim que tiver a nova senha em mãos, volte para a tela de login.</p>
+          </div>
+        </div>
+      </div>
+      <p class="support">Não sabe quem é o coordenador do seu subsetor? <a href="mailto:suporte@mv.com.br">Fale com o suporte</a></p>
+      <a class="back-link" routerLink="/login"><svg lucideArrowLeft size="14" aria-hidden="true"></svg> Voltar para o login</a>
+    </div>
+  </section>
+</main>

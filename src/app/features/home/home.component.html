@@ -1,0 +1,101 @@
+<div class="home-shell">
+  <app-header [user]="loggedUser()" />
+  <div class="workspace">
+    <app-main-nav active="pacotes" [user]="loggedUser()" />
+    <app-client-list
+      [clients]="clients()"
+      [selectedClientId]="selectedClient.id"
+      [loading]="clientLoading()"
+      [errorMessage]="clientError()"
+      [searchTerm]="clientSearch()"
+      (selectClient)="selectClient($event)"
+      (searchChange)="updateClientSearch($event)"
+      (loadMore)="loadMoreClients()"
+    />
+    <main class="content">
+      <div class="breadcrumb">
+        Início <svg lucideChevronRight size="12" class="breadcrumb-icon" aria-hidden="true"></svg> Clientes <svg lucideChevronRight size="12" class="breadcrumb-icon" aria-hidden="true"></svg> <b>{{ selectedClient.nm_cliente }}</b>
+      </div>
+      <section class="page-heading">
+        <div>
+          <h1>{{ selectedClient.nm_cliente }}</h1>
+          <p>
+            Setor de atendimento: <b>{{ selectedClient.setor_atendimento }}</b>
+          </p>
+        </div>
+        <button class="new-package" routerLink="/pacotes/novo" [queryParams]="{ id_cliente: selectedClient.id }" queryParamsHandling="merge" [disabled]="!clients().length"><svg lucidePlus size="14" aria-hidden="true"></svg> Novo pacote</button>
+      </section>
+      <section class="metrics" style="grid-template-columns: repeat(3, 1fr)">
+        <article>
+          <small>Total de pacotes</small><strong>{{ packageCounts().total_pacotes }}</strong>
+        </article>
+        <article class="metric--applied">
+          <small>Aplicados</small><strong>{{ packageCounts().total_aplicados }}</strong>
+        </article>
+        <article class="metric--pending">
+          <small>Pendentes</small><strong>{{ packageCounts().total_pendentes }}</strong>
+        </article>
+      </section>
+      <section class="filter-panel" aria-label="Filtros de pacotes">
+        <div class="filter-panel__heading">
+          <span><svg lucideListFilter size="12" aria-hidden="true"></svg> FILTRAR PACOTES</span><button (click)="clearFilters()">Limpar filtros</button>
+        </div>
+        <div class="filters">
+          <label class="filter filter--wide"
+            ><span>Nome do pacote</span
+            ><input [(ngModel)]="filters.nm_pacote" (ngModelChange)="updatePackageFilters()" placeholder="Ex.: pep-core" /></label
+          ><label class="filter"
+            ><span>Ticket</span><input [(ngModel)]="filters.ticket" (ngModelChange)="updatePackageFilters()" placeholder="Ex.: PEP-1042" /></label
+          ><label class="filter"
+            ><span>Produto</span
+            ><select [(ngModel)]="filters.id_produto" (ngModelChange)="updatePackageFilters()">
+              <option [ngValue]="''">Todos</option>
+              @for (product of products(); track product.id) {
+                <option [ngValue]="product.id">{{ product.nm_produto }}</option>
+              }
+            </select></label
+          ><label class="filter"
+            ><span>Versão</span><input [(ngModel)]="filters.versao_correcao" (ngModelChange)="updatePackageFilters()" placeholder="Ex.: 3.4" /></label
+          ><label class="filter"
+            ><span>Aprovação GP</span
+            ><select [(ngModel)]="filters.sn_aprovado_gerente" (ngModelChange)="updatePackageFilters()">
+              <option value="">Todos</option>
+              <option value="S">Sim</option>
+              <option value="N">Não</option>
+            </select></label
+          ><label class="filter"
+            ><span>Aplicado</span
+            ><select [(ngModel)]="filters.sn_aplicado" (ngModelChange)="updatePackageFilters()">
+              <option value="">Todos</option>
+              <option value="S">Sim</option>
+              <option value="N">Não</option>
+            </select></label
+          ><label class="filter"
+            ><span>Mergeado</span
+            ><select [(ngModel)]="filters.sn_mergeado" (ngModelChange)="updatePackageFilters()">
+              <option value="">Todos</option>
+              <option value="S">Sim</option>
+              <option value="N">Não</option>
+            </select></label
+          ><label class="filter"
+            ><span>Ticket bug</span
+            ><input [(ngModel)]="filters.ticket_bug" (ngModelChange)="updatePackageFilters()" placeholder="Ex.: PEP-1091" /></label
+          ><label class="filter"
+            ><span>Setor</span
+            ><select [(ngModel)]="filters.id_setor" (ngModelChange)="updatePackageFilters()">
+              <option [ngValue]="''">Todos</option>
+              @for (setor of setores(); track setor.id) {
+                <option [ngValue]="setor.id">{{ setor.sg_setor }}</option>
+              }
+            </select></label
+          >
+        </div>
+      </section>
+      <div class="table-heading">
+        <span>Pacotes encontrados</span
+        ><b>{{ packageCounts().total_pacotes }} pacote{{ packageCounts().total_pacotes === 1 ? '' : 's' }}</b>
+      </div>
+      <app-package-table [packages]="packages()" [loading]="packageLoading()" [errorMessage]="packageError()" (loadMore)="loadMorePackages()" />
+    </main>
+  </div>
+</div>

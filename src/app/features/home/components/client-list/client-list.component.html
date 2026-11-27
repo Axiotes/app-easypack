@@ -1,0 +1,32 @@
+<aside class="client-list">
+  <div class="client-list__title">CLIENTES</div>
+  <label class="client-search"
+    ><svg lucideSearch size="14" aria-hidden="true"></svg><input
+      [(ngModel)]="search"
+      (ngModelChange)="searchChange.emit($event)"
+      placeholder="Buscar cliente..."
+  /></label>
+  <div class="clients" (scroll)="onScroll($event)">
+    @for (client of filteredClients; track client.id) {
+      <button
+        class="client"
+        [class.client--selected]="client.id === selectedClientId"
+        (click)="selectClient.emit(client)"
+      >
+        <span class="client__count">{{ packageCount[client.id] || 0 }}</span>
+        <strong>{{ client.nm_cliente }}</strong
+        ><small><svg lucideMapPin size="10" aria-hidden="true"></svg> {{ client.setor_atendimento }}</small>
+      </button>
+    } @empty {
+      @if (!loading) {
+        <p class="empty">Nenhum cliente encontrado.</p>
+      }
+    }
+    @if (loading) {
+      <p class="empty">Carregando clientes...</p>
+    }
+    @if (errorMessage) {
+      <p class="empty">{{ errorMessage }}</p>
+    }
+  </div>
+</aside>

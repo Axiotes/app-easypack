@@ -1,0 +1,63 @@
+<div class="home-shell">
+  <app-header [user]="loggedUser()" />
+  <div class="workspace">
+    <app-main-nav active="clientes" [user]="loggedUser()" />
+    <main class="content" [attr.aria-busy]="loading() || saving()">
+      <div class="breadcrumb">
+        Início <svg lucideChevronRight size="12" class="breadcrumb-icon" aria-hidden="true"></svg>
+        <a routerLink="/clientes">Gestão de clientes</a>
+        <svg lucideChevronRight size="12" class="breadcrumb-icon" aria-hidden="true"></svg>
+        <b>{{ isEdit() ? 'Editar cliente' : 'Novo cliente' }}</b>
+      </div>
+      <section class="page-heading">
+        <div>
+          <h1>{{ isEdit() ? 'Editar cliente' : 'Novo cliente' }}</h1>
+          <p>O responsável pelo cliente precisa ter o cargo Gerente de Projeto.</p>
+        </div>
+        <a class="back-link" routerLink="/clientes"><svg lucideArrowLeft size="14" aria-hidden="true"></svg> Voltar</a>
+      </section>
+      @if (loading()) {
+        <div class="feedback" role="status">Carregando dados do cadastro...</div>
+      } @else if (loadError()) {
+        <div class="feedback feedback--error" role="alert">{{ loadError() }}</div>
+      } @else {
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+          <div class="form-panels">
+            <section class="form-panel" aria-labelledby="cliente-heading">
+              <h2 id="cliente-heading">Dados do cliente</h2>
+              <div class="fields">
+                <label class="wide">Nome do cliente *
+                  <input formControlName="nm_cliente" maxlength="255" placeholder="Ex.: Grupo Vitalis" [attr.aria-invalid]="invalid('nm_cliente')" />
+                  @if (invalid('nm_cliente')) { <small class="validation">Informe o nome do cliente.</small> }
+                </label>
+                <label>Setor de atendimento *
+                  <select formControlName="id_setor_atendimento" [attr.aria-invalid]="invalid('id_setor_atendimento')">
+                    <option [ngValue]="null">Selecione</option>
+                    @for (setor of setores(); track setor.id) { <option [ngValue]="setor.id">{{ setor.nm_setor }}</option> }
+                  </select>
+                  @if (invalid('id_setor_atendimento')) { <small class="validation">Selecione o setor de atendimento.</small> }
+                </label>
+                <label>Responsável (Gerente de Projeto) *
+                  <select formControlName="id_usuario" [attr.aria-invalid]="invalid('id_usuario')">
+                    <option [ngValue]="null">Selecione</option>
+                    @for (gerente of gerentesProjeto(); track gerente.id) { <option [ngValue]="gerente.id">{{ gerente.nm_completo }}</option> }
+                  </select>
+                  @if (invalid('id_usuario')) { <small class="validation">Selecione o responsável.</small> }
+                  @if (!gerentesProjeto().length) { <small class="validation">Nenhum usuário com cargo Gerente de Projeto cadastrado.</small> }
+                </label>
+              </div>
+            </section>
+          </div>
+          @if (saveError()) { <div class="feedback feedback--error" role="alert">{{ saveError() }}</div> }
+          <div class="form-actions">
+            <small>* Campos obrigatórios</small>
+            <a class="back-link" routerLink="/clientes">Cancelar</a>
+            <button class="new-package" type="submit" [disabled]="saving()">
+              <svg lucideSave size="14" aria-hidden="true"></svg>{{ saving() ? 'Salvando...' : 'Salvar cliente' }}
+            </button>
+          </div>
+        </form>
+      }
+    </main>
+  </div>
+</div>
