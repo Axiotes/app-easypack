@@ -1,0 +1,15 @@
+<nav class="navigation" aria-label="Navegação principal">
+  <a [class.active]="active === 'pacotes'" routerLink="/home" queryParamsHandling="preserve"
+    ><svg lucideBuilding2 size="14" aria-hidden="true"></svg><span>Clientes</span></a
+  >
+  @if (canManageClientes()) {
+    <a [class.active]="active === 'clientes'" routerLink="/clientes"
+      ><svg lucideUsers size="14" aria-hidden="true"></svg><span>Gestão de clientes</span></a
+    >
+  }
+  @if (canManageUsuarios()) {
+    <a [class.active]="active === 'usuarios'" routerLink="/usuarios"
+      ><svg lucideUserCog size="14" aria-hidden="true"></svg><span>Usuários</span></a
+    >
+  }
+</nav>

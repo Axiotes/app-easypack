@@ -21,9 +21,10 @@
         <label for="username">Usuário</label>
         <div class="field" [class.field--invalid]="submitted() && !username()"><svg lucideUserRound size="17" aria-hidden="true"></svg><input id="username" name="username" type="text" autocomplete="username" placeholder="maria.silva" [(ngModel)]="username" required /></div>
         @if (submitted() && !username()) { <p class="validation">Informe seu usuário.</p> }
-        <div class="label-row"><label for="password">Senha</label><a href="/login">Esqueci minha senha</a></div>
-        <div class="field" [class.field--invalid]="submitted() && !password()"><svg lucideLockKeyhole size="17" aria-hidden="true"></svg><input id="password" name="password" [type]="showPassword() ? 'text' : 'password'" autocomplete="current-password" placeholder="••••••••" [(ngModel)]="password" required /><button type="button" class="visibility" (click)="showPassword.set(!showPassword())" [attr.aria-label]="showPassword() ? 'Ocultar senha' : 'Mostrar senha'">@if (showPassword()) { <svg lucideEyeOff size="18" aria-hidden="true"></svg> } @else { <svg lucideEye size="18" aria-hidden="true"></svg> }</button></div>
+        <div class="label-row"><label for="password">Senha</label><a routerLink="/recuperar-senha">Esqueci minha senha</a></div>
+        <div class="field" [class.field--invalid]="submitted() && (!password() || password().length < 6)"><svg lucideLockKeyhole size="17" aria-hidden="true"></svg><input id="password" name="password" [type]="showPassword() ? 'text' : 'password'" autocomplete="current-password" placeholder="••••••••" [(ngModel)]="password" required /><button type="button" class="visibility" (click)="showPassword.set(!showPassword())" [attr.aria-label]="showPassword() ? 'Ocultar senha' : 'Mostrar senha'">@if (showPassword()) { <svg lucideEyeOff size="18" aria-hidden="true"></svg> } @else { <svg lucideEye size="18" aria-hidden="true"></svg> }</button></div>
         @if (submitted() && !password()) { <p class="validation">Informe sua senha.</p> }
+        @else if (submitted() && password().length < 6) { <p class="validation">A senha deve ter pelo menos 6 caracteres.</p> }
         @if (feedback(); as message) { <p class="feedback" [class.feedback--success]="message.type === 'success'" [class.feedback--error]="message.type === 'error'" role="status">{{ message.text }}</p> }
         <button class="submit" type="submit" [disabled]="loading()">{{ loading() ? 'Entrando...' : 'Entrar na plataforma' }} <svg lucideArrowRight size="18" aria-hidden="true"></svg></button>
       </form>
