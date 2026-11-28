@@ -1,14 +1,14 @@
-import { LucideBuilding2, LucideHistory, LucideLayoutDashboard, LucideUsers, LucideUserCog } from '@lucide/angular';
+import { LucideBuilding2, LucideFileText, LucideHistory, LucideLayoutDashboard, LucideUsers, LucideUserCog } from '@lucide/angular';
 import { Component, Input, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LoggedUser } from '../../../features/home/models/release.models';
 
-export type MainNavActive = 'dashboard' | 'pacotes' | 'clientes' | 'usuarios' | 'logs';
+export type MainNavActive = 'dashboard' | 'pacotes' | 'clientes' | 'usuarios' | 'logs' | 'relatorios';
 
 @Component({
   selector: 'app-main-nav',
   standalone: true,
-  imports: [RouterLink, LucideBuilding2, LucideUsers, LucideUserCog, LucideHistory, LucideLayoutDashboard],
+  imports: [RouterLink, LucideBuilding2, LucideUsers, LucideUserCog, LucideHistory, LucideLayoutDashboard, LucideFileText],
   templateUrl: './main-nav.component.html',
   styleUrls: ['../../../features/home/home.component.scss', './main-nav.component.scss'],
 })
