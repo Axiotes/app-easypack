@@ -1,59 +1,77 @@
-# AppEasypack
+# EasyPack — Front-end
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.2.
+Front-end do EasyPack: sistema de controle de pacotes e correções aplicados em
+ambientes de clientes, com rastreabilidade de quem fez o quê (aprovações, aplicação
+de pacote, histórico de operações, dashboard e relatórios). Projeto da disciplina de
+Fábrica de Software, construído em Angular (standalone components, signals).
 
-## Development server
+Repositório do backend (FastAPI): [api-easypack](https://github.com/Axiotes/api-easypack).
 
-To start a local development server, run:
+## Stack
+
+- Angular 21 (standalone components, signals, SSR)
+- [@lucide/angular](https://lucide.dev/) para ícones
+- [Vitest](https://vitest.dev/) para testes unitários
+
+## Pré-requisitos
+
+- Node.js 20+
+- O backend (`api-easypack`) rodando em `http://localhost:8000` — este projeto consome a
+  API diretamente nessa URL (sem arquivo de ambiente, a URL está fixa nos *services*).
+
+## Rodando o projeto
 
 ```bash
+npm install
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Acesse `http://localhost:4200`. A aplicação recarrega automaticamente ao salvar qualquer
+arquivo. Login de teste: qualquer usuário do catálogo de exemplo do backend (ex.:
+`maria.silva`), senha `admin123`.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Testes automatizados
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+## Build de produção
 
 ```bash
-ng e2e
+ng build
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Os artefatos ficam em `dist/`.
 
-## Additional Resources
+## Estrutura do projeto
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```
+src/app/
+  core/auth/          autenticação centralizada (AuthService, guard de rotas, interceptor HTTP)
+  features/
+    auth/              login, recuperação de senha
+    home/              listagem/cadastro de pacotes e correções por cliente
+    clientes/          gestão de clientes (Gerente de Projeto)
+    usuarios/          gestão de usuários (Coordenador)
+    logs/              histórico de operações (Coordenador / Gerente de Projeto)
+    dashboard/         indicadores gerais de pacotes e correções
+    relatorios/        relatórios consolidados, exportáveis em CSV
+  shared/              componentes e estilos reutilizados entre telas
+```
+
+## Principais funcionalidades
+
+- Login com rotas protegidas (todas as telas internas exigem sessão válida; sessão
+  expirada redireciona para o login automaticamente).
+- Cadastro e acompanhamento de pacotes/correções por cliente, com as aprovações
+  (code review, Gerente de Projeto, aplicação) feitas direto na tela de detalhes.
+- Gestão de usuários (restrita ao próprio subsetor do Coordenador) e de clientes
+  (restrita a Gerente de Projeto).
+- Histórico de operações, dashboard com indicadores e relatórios exportáveis em CSV.
+
+## Mais sobre o Angular CLI
+
+Este projeto foi gerado com [Angular CLI](https://github.com/angular/angular-cli). Para o
+guia completo de comandos (scaffolding, schematics, etc.), veja a
+[referência do Angular CLI](https://angular.dev/tools/cli).
