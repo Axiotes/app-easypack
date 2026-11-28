@@ -216,7 +216,7 @@ export class PackageService {
             sg_setor: setor?.sg_setor ?? '—',
             ticket: correcao.ticket,
             ticket_bug: correcao.ticket_bug,
-            sn_mergeado: correcao.sn_mergeado ?? 'N',
+            sn_aprovado_code_review: correcao.sn_aprovado_code_review,
             sn_aprovado_gerente: pacote.sn_aprovado_gerente,
             sn_aplicado: pacote.sn_aplicado,
           });
@@ -235,7 +235,8 @@ export class PackageService {
     if (filters.sn_aplicado !== '' && item.sn_aplicado !== filters.sn_aplicado) return false;
     if (filters.sn_aprovado_gerente !== '' && item.sn_aprovado_gerente !== filters.sn_aprovado_gerente)
       return false;
-    if (filters.sn_mergeado !== '' && item.sn_mergeado !== filters.sn_mergeado) return false;
+    if (filters.sn_aprovado_code_review !== '' && item.sn_aprovado_code_review !== filters.sn_aprovado_code_review)
+      return false;
     if (filters.ticket_bug && !contains(item.ticket_bug ?? '', filters.ticket_bug)) return false;
     if (filters.id_setor !== '' && item.id_setor !== filters.id_setor) return false;
     return true;
