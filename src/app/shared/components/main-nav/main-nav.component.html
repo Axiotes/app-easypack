@@ -1,4 +1,7 @@
 <nav class="navigation" aria-label="Navegação principal">
+  <a [class.active]="active === 'dashboard'" routerLink="/dashboard"
+    ><svg lucideLayoutDashboard size="14" aria-hidden="true"></svg><span>Dashboard</span></a
+  >
   <a [class.active]="active === 'pacotes'" routerLink="/home" queryParamsHandling="preserve"
     ><svg lucideBuilding2 size="14" aria-hidden="true"></svg><span>Clientes</span></a
   >

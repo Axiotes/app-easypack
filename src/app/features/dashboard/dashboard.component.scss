@@ -1,0 +1,67 @@
+.feedback {
+  background: #0e192a;
+  border: 1px solid #1d2e49;
+  border-radius: 6px;
+  color: #91a7c9;
+  font-size: 12px;
+  margin-top: 16px;
+  padding: 32px 16px;
+  text-align: center;
+}
+.feedback--error {
+  color: #efb0b0;
+}
+.feedback button {
+  background: transparent;
+  border: 1px solid #3a4f72;
+  border-radius: 4px;
+  color: #b9c9e2;
+  cursor: pointer;
+  font-size: 10px;
+  margin-left: 8px;
+  padding: 3px 8px;
+}
+
+.metric--review {
+  background: #0d1f33 !important;
+  border-color: #1d4066 !important;
+}
+.metric--review strong {
+  color: #5a9bff !important;
+}
+.metric--manager {
+  background: #1a1830 !important;
+  border-color: #3b3570 !important;
+}
+.metric--manager strong {
+  color: #a994ff !important;
+}
+
+.dashboard-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 4px;
+}
+.detail-panel {
+  background: #0e192a;
+  border: 1px solid #1d2e49;
+  border-radius: 6px;
+  min-width: 0;
+}
+.detail-panel h2 {
+  border-bottom: 1px solid #22314a;
+  color: #91a7c9;
+  font: 600 11px ui-monospace, monospace;
+  margin: 0;
+  padding: 14px 16px;
+}
+.detail-panel--wide {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 1000px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
