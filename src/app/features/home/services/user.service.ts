@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, forkJoin, map, switchMap } from 'rxjs';
 import { LoggedUser, Usuario, UsuarioCreate, UsuarioUpdate } from '../models/release.models';
-import { authHeaders } from './auth-headers';
 import { ReferenceDataService } from './reference-data.service';
 
 interface UsuarioMeRaw {
@@ -11,7 +10,7 @@ interface UsuarioMeRaw {
   nm_completo: string;
   cargo: string;
   id_subsetor: number;
-  id_produto: number;
+  id_produto: number | null;
 }
 
 const BASE = 'http://localhost:8000/api/v1';
@@ -23,7 +22,7 @@ export class UserService {
 
   /** `/usuarios/me` só retorna ids de subsetor/produto; resolve os nomes e o setor aqui. */
   getCurrentUser(): Observable<LoggedUser> {
-    return this.http.get<UsuarioMeRaw>(`${BASE}/usuarios/me`, { headers: authHeaders() }).pipe(
+    return this.http.get<UsuarioMeRaw>(`${BASE}/usuarios/me`).pipe(
       switchMap((raw) =>
         forkJoin({
           subsetores: this.referenceData.getSubsetores(),
@@ -52,15 +51,15 @@ export class UserService {
   }
 
   list(): Observable<Usuario[]> {
-    return this.http.get<Usuario[]>(`${BASE}/usuarios`, { headers: authHeaders() });
+    return this.http.get<Usuario[]>(`${BASE}/usuarios`);
   }
 
   getById(id: number): Observable<Usuario> {
-    return this.http.get<Usuario>(`${BASE}/usuarios/${id}`, { headers: authHeaders() });
+    return this.http.get<Usuario>(`${BASE}/usuarios/${id}`);
   }
 
   create(data: UsuarioCreate): Observable<Usuario> {
-    return this.http.post<Usuario>(`${BASE}/usuarios`, data, { headers: authHeaders() }).pipe(
+    return this.http.post<Usuario>(`${BASE}/usuarios`, data).pipe(
       map((usuario) => {
         this.referenceData.invalidateUsuarios();
         return usuario;
@@ -69,7 +68,7 @@ export class UserService {
   }
 
   update(id: number, data: UsuarioUpdate): Observable<Usuario> {
-    return this.http.put<Usuario>(`${BASE}/usuarios/${id}`, data, { headers: authHeaders() }).pipe(
+    return this.http.put<Usuario>(`${BASE}/usuarios/${id}`, data).pipe(
       map((usuario) => {
         this.referenceData.invalidateUsuarios();
         return usuario;
@@ -78,7 +77,7 @@ export class UserService {
   }
 
   remove(id: number): Observable<void> {
-    return this.http.delete<void>(`${BASE}/usuarios/${id}`, { headers: authHeaders() }).pipe(
+    return this.http.delete<void>(`${BASE}/usuarios/${id}`).pipe(
       map(() => this.referenceData.invalidateUsuarios()),
     );
   }

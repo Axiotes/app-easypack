@@ -14,7 +14,6 @@ import {
   UsuarioRaw,
   YesNo,
 } from '../models/release.models';
-import { authHeaders } from './auth-headers';
 import { ReferenceDataService } from './reference-data.service';
 
 const BASE = 'http://localhost:8000/api/v1';
@@ -74,37 +73,32 @@ export class PackageService {
    * do seu subsetor), já que a tela não coleta esses campos.
    */
   create(data: CreatePackage): Observable<CreatedPackage> {
-    const headers = authHeaders();
-    return this.http.get<UsuarioMeRaw>(`${BASE}/usuarios/me`, { headers }).pipe(
+    return this.http.get<UsuarioMeRaw>(`${BASE}/usuarios/me`).pipe(
       switchMap((me) =>
         this.http
-          .get<SubsetorRaw>(`${BASE}/subsetores/${me.id_subsetor}`, { headers })
+          .get<SubsetorRaw>(`${BASE}/subsetores/${me.id_subsetor}`)
           .pipe(map((subsetor) => ({ id_usuario: me.id, id_setor: subsetor.id_setor }))),
       ),
       switchMap(({ id_usuario, id_setor }) =>
-        this.http.post<CorrecaoRaw>(
-          `${BASE}/correcoes`,
-          {
-            ticket: data.ticket,
-            ticket_bug: data.ticket_bug,
-            merge: data.merge,
-            id_cliente: data.id_cliente,
-            id_produto: data.id_produto,
-            id_usuario,
-            id_setor,
-            sn_mergeado: data.sn_mergeado,
-            versao_correcao: data.versao_correcao,
-          },
-          { headers },
-        ),
+        this.http.post<CorrecaoRaw>(`${BASE}/correcoes`, {
+          ticket: data.ticket,
+          ticket_bug: data.ticket_bug,
+          merge: data.merge,
+          id_cliente: data.id_cliente,
+          id_produto: data.id_produto,
+          id_usuario,
+          id_setor,
+          sn_mergeado: data.sn_mergeado,
+          versao_correcao: data.versao_correcao,
+        }),
       ),
       switchMap((correcao) =>
         this.http
-          .post<PacoteRaw>(
-            `${BASE}/pacotes`,
-            { id_correcao: correcao.id, tp_pacote: data.tp_pacote, nm_pacote: data.nm_pacote },
-            { headers },
-          )
+          .post<PacoteRaw>(`${BASE}/pacotes`, {
+            id_correcao: correcao.id,
+            tp_pacote: data.tp_pacote,
+            nm_pacote: data.nm_pacote,
+          })
           .pipe(map((pacote) => ({ id: pacote.id, id_correcao: correcao.id }))),
       ),
     );
@@ -115,42 +109,33 @@ export class PackageService {
   }
 
   aprovarCorrecao(idCorrecao: number): Observable<void> {
-    return this.http
-      .post(`${BASE}/correcoes/${idCorrecao}/aprovar`, {}, { headers: authHeaders() })
-      .pipe(map(() => undefined));
+    return this.http.post(`${BASE}/correcoes/${idCorrecao}/aprovar`, {}).pipe(map(() => undefined));
   }
 
   aprovarGerente(idPacote: number): Observable<void> {
-    return this.http
-      .post(`${BASE}/pacotes/${idPacote}/aprovar-gerente`, {}, { headers: authHeaders() })
-      .pipe(map(() => undefined));
+    return this.http.post(`${BASE}/pacotes/${idPacote}/aprovar-gerente`, {}).pipe(map(() => undefined));
   }
 
   aplicar(idPacote: number, idUsuarioAprovadorPar: number | null): Observable<void> {
     return this.http
-      .post(
-        `${BASE}/pacotes/${idPacote}/aplicar`,
-        { id_usuario_aprovador_par: idUsuarioAprovadorPar },
-        { headers: authHeaders() },
-      )
+      .post(`${BASE}/pacotes/${idPacote}/aplicar`, { id_usuario_aprovador_par: idUsuarioAprovadorPar })
       .pipe(map(() => undefined));
   }
 
   alterarMergeado(idCorrecao: number, sn_mergeado: YesNo): Observable<void> {
     return this.http
-      .post(`${BASE}/correcoes/${idCorrecao}/merge`, { sn_mergeado }, { headers: authHeaders() })
+      .post(`${BASE}/correcoes/${idCorrecao}/merge`, { sn_mergeado })
       .pipe(map(() => undefined));
   }
 
   /** Não existe `/pacotes/{id}/detalhes`; monta os detalhes juntando pacote + correção + referências. */
   getById(id: number): Observable<PackageDetails> {
-    const headers = authHeaders();
-    return this.http.get<PacoteRaw>(`${BASE}/pacotes/${id}`, { headers }).pipe(
+    return this.http.get<PacoteRaw>(`${BASE}/pacotes/${id}`).pipe(
       switchMap((pacote) =>
-        this.http.get<CorrecaoRaw>(`${BASE}/correcoes/${pacote.id_correcao}`, { headers }).pipe(
+        this.http.get<CorrecaoRaw>(`${BASE}/correcoes/${pacote.id_correcao}`).pipe(
           switchMap((correcao) =>
             forkJoin({
-              cliente: this.http.get<ClienteRaw>(`${BASE}/clientes/${correcao.id_cliente}`, { headers }),
+              cliente: this.http.get<ClienteRaw>(`${BASE}/clientes/${correcao.id_cliente}`),
               produtos: this.referenceData.getProdutos(),
               setores: this.referenceData.getSetores(),
               usuarios: this.referenceData.getUsuarios(),
@@ -189,10 +174,9 @@ export class PackageService {
 
   /** Não existe `/pacotes/detalhados`; junta /pacotes + /correcoes no cliente e filtra em memória. */
   private joinedPackages(idCliente: number, filters: PackageFilters): Observable<ReleasePackage[]> {
-    const headers = authHeaders();
     return forkJoin({
-      pacotes: this.http.get<PacoteRaw[]>(`${BASE}/pacotes`, { headers }),
-      correcoes: this.http.get<CorrecaoRaw[]>(`${BASE}/correcoes`, { headers }),
+      pacotes: this.http.get<PacoteRaw[]>(`${BASE}/pacotes`),
+      correcoes: this.http.get<CorrecaoRaw[]>(`${BASE}/correcoes`),
       produtos: this.referenceData.getProdutos(),
       setores: this.referenceData.getSetores(),
     }).pipe(
