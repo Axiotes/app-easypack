@@ -2,6 +2,31 @@
   <app-brand />
   @if (user; as currentUser) {
     <div class="header__right">
+      <div class="notification-area">
+        <button type="button" class="notification-trigger" (click)="toggleNotifications()" [attr.aria-expanded]="notificationOpen()" aria-label="Notificações">
+          <svg lucideBell size="16" aria-hidden="true"></svg>
+          @if (unreadCount() > 0) { <span class="notification-count">{{ unreadCount() > 99 ? '99+' : unreadCount() }}</span> }
+        </button>
+        @if (notificationOpen()) {
+          <section class="notification-panel" aria-label="Notificações do usuário">
+            <div class="notification-panel__heading"><strong>Notificações</strong><button type="button" (click)="loadNotifications()" aria-label="Atualizar notificações">Atualizar</button></div>
+            @if (notificationLoading()) { <p class="notification-state">Carregando notificações...</p> }
+            @else if (notificationError()) { <p class="notification-state notification-state--error">Não foi possível carregar. <button type="button" (click)="loadNotifications()">Tentar novamente</button></p> }
+            @else if (!notifications().length) { <p class="notification-state">Você não tem notificações.</p> }
+            @else {
+              <ul>
+                @for (item of notifications(); track item.id) {
+                  <li [class.notification--unread]="!item.lida">
+                    <div class="notification-copy"><strong>{{ item.titulo }}</strong><p>{{ notificationMessage(item) }}</p><time>{{ formatDate(item.criado_em) }}</time></div>
+                    @if (!item.lida) { <button type="button" class="mark-read" (click)="markAsRead(item)" [disabled]="markingRead() !== null" aria-label="Marcar como lida"><svg lucideCheck size="14" aria-hidden="true"></svg></button> }
+                    @else { <span class="read-label">Lida</span> }
+                  </li>
+                }
+              </ul>
+            }
+          </section>
+        }
+      </div>
       <div class="user"><span>{{ initials(currentUser.nm_completo) }}</span><div><strong>{{ currentUser.nm_completo }}</strong><small>{{ currentUser.nm_subsetor }} · {{ currentUser.nm_produto }} · {{ currentUser.cargo }}</small></div><svg lucideChevronDown size="12" class="user-chevron" aria-hidden="true"></svg></div>
       <button type="button" class="logout" (click)="logout()" aria-label="Sair"><svg lucideLogOut size="13" aria-hidden="true"></svg><span>Sair</span></button>
     </div>

@@ -1,5 +1,5 @@
 <div class="home-shell">
-  <app-header [user]="loggedUser()" />
+  <app-header [user]="loggedUser()" [clientId]="selectedClient.id" />
   <div class="workspace">
     <app-main-nav active="pacotes" [user]="loggedUser()" />
     <app-client-list
