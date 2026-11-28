@@ -1,4 +1,10 @@
 <nav class="navigation" aria-label="Navegação principal">
+  <a [class.active]="active === 'dashboard'" routerLink="/dashboard"
+    ><svg lucideLayoutDashboard size="14" aria-hidden="true"></svg><span>Dashboard</span></a
+  >
+  <a [class.active]="active === 'relatorios'" routerLink="/relatorios"
+    ><svg lucideFileText size="14" aria-hidden="true"></svg><span>Relatórios</span></a
+  >
   <a [class.active]="active === 'pacotes'" routerLink="/home" queryParamsHandling="preserve"
     ><svg lucideBuilding2 size="14" aria-hidden="true"></svg><span>Clientes</span></a
   >
@@ -10,6 +16,11 @@
   @if (canManageUsuarios()) {
     <a [class.active]="active === 'usuarios'" routerLink="/usuarios"
       ><svg lucideUserCog size="14" aria-hidden="true"></svg><span>Usuários</span></a
+    >
+  }
+  @if (canViewLogs()) {
+    <a [class.active]="active === 'logs'" routerLink="/logs"
+      ><svg lucideHistory size="14" aria-hidden="true"></svg><span>Histórico</span></a
     >
   }
 </nav>

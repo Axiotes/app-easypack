@@ -1,5 +1,5 @@
 <div class="home-shell">
-  <app-header [user]="loggedUser()" [clientId]="selectedClient.id" />
+  <app-header [user]="loggedUser()" />
   <div class="workspace">
     <app-main-nav active="pacotes" [user]="loggedUser()" />
     <app-client-list
@@ -71,11 +71,11 @@
               <option value="N">Não</option>
             </select></label
           ><label class="filter"
-            ><span>Mergeado</span
-            ><select [(ngModel)]="filters.sn_mergeado" (ngModelChange)="updatePackageFilters()">
+            ><span>Code review</span
+            ><select [(ngModel)]="filters.sn_aprovado_code_review" (ngModelChange)="updatePackageFilters()">
               <option value="">Todos</option>
-              <option value="S">Sim</option>
-              <option value="N">Não</option>
+              <option value="S">Aprovado</option>
+              <option value="N">Não aprovado</option>
             </select></label
           ><label class="filter"
             ><span>Ticket bug</span

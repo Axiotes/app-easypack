@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, shareReplay } from 'rxjs';
 import { Product, Setor, Subsetor, TipoPacote, UsuarioRaw } from '../models/release.models';
-import { authHeaders } from './auth-headers';
 
 const BASE = 'http://localhost:8000/api/v1';
 
@@ -24,46 +23,34 @@ export class ReferenceDataService {
   private tiposPacote$?: Observable<TipoPacote[]>;
 
   getProdutos(): Observable<Product[]> {
-    this.produtos$ ??= this.http
-      .get<Product[]>(`${BASE}/produtos`, { headers: authHeaders() })
-      .pipe(shareReplay(1));
+    this.produtos$ ??= this.http.get<Product[]>(`${BASE}/produtos`).pipe(shareReplay(1));
     return this.produtos$;
   }
 
   getSetores(): Observable<Setor[]> {
-    this.setores$ ??= this.http
-      .get<Setor[]>(`${BASE}/setores`, { headers: authHeaders() })
-      .pipe(shareReplay(1));
+    this.setores$ ??= this.http.get<Setor[]>(`${BASE}/setores`).pipe(shareReplay(1));
     return this.setores$;
   }
 
   getSubsetores(): Observable<Subsetor[]> {
-    this.subsetores$ ??= this.http
-      .get<Subsetor[]>(`${BASE}/subsetores`, { headers: authHeaders() })
-      .pipe(shareReplay(1));
+    this.subsetores$ ??= this.http.get<Subsetor[]>(`${BASE}/subsetores`).pipe(shareReplay(1));
     return this.subsetores$;
   }
 
   getUsuarios(): Observable<UsuarioRaw[]> {
-    this.usuarios$ ??= this.http
-      .get<UsuarioRaw[]>(`${BASE}/usuarios`, { headers: authHeaders() })
-      .pipe(shareReplay(1));
+    this.usuarios$ ??= this.http.get<UsuarioRaw[]>(`${BASE}/usuarios`).pipe(shareReplay(1));
     return this.usuarios$;
   }
 
   /** Ordem do mais sênior ao mais júnior (GERENTE_PROJETO primeiro). */
   getCargos(): Observable<string[]> {
-    this.cargos$ ??= this.http
-      .get<string[]>(`${BASE}/cargos`, { headers: authHeaders() })
-      .pipe(shareReplay(1));
+    this.cargos$ ??= this.http.get<string[]>(`${BASE}/cargos`).pipe(shareReplay(1));
     return this.cargos$;
   }
 
   /** Grupo FORMS_REPORTS (Soul/Pagu) ou FRONT_BACK (PEP/Portaria/SACR) — ver `Produto.nm_grupo_tipo_pacote`. */
   getTiposPacote(): Observable<TipoPacote[]> {
-    this.tiposPacote$ ??= this.http
-      .get<TipoPacote[]>(`${BASE}/tipos-pacote`, { headers: authHeaders() })
-      .pipe(shareReplay(1));
+    this.tiposPacote$ ??= this.http.get<TipoPacote[]>(`${BASE}/tipos-pacote`).pipe(shareReplay(1));
     return this.tiposPacote$;
   }
 

@@ -1,14 +1,10 @@
 import { LucideArrowRight, LucideCircle, LucideDiamond, LucideEye, LucideEyeOff, LucideHistory, LucideLockKeyhole, LucideShieldCheck, LucideUserRound, LucideWorkflow } from '@lucide/angular';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../core/auth/auth.service';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
-
-interface LoginResponse {
-  token: string;
-  message: string;
-}
 
 @Component({
   selector: 'app-login',
@@ -18,15 +14,20 @@ interface LoginResponse {
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  private readonly http = inject(HttpClient);
+  private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   protected readonly username = signal('');
   protected readonly password = signal('');
   protected readonly showPassword = signal(false);
   protected readonly submitted = signal(false);
   protected readonly loading = signal(false);
-  protected readonly feedback = signal<{ type: 'success' | 'error'; text: string } | null>(null);
+  protected readonly feedback = signal<{ type: 'success' | 'error'; text: string } | null>(
+    this.route.snapshot.queryParamMap.get('motivo') === 'sessao-expirada'
+      ? { type: 'error', text: 'Sua sessão expirou. Entre novamente para continuar.' }
+      : null,
+  );
 
   protected submit(): void {
     this.submitted.set(true);
@@ -35,29 +36,24 @@ export class LoginComponent {
     if (!this.username() || this.password().length < 6 || this.loading()) return;
 
     this.loading.set(true);
-    this.http
-      .post<LoginResponse>('http://localhost:8000/api/v1/auth/login', {
-        nm_usuario: this.username(),
-        senha: this.password(),
-      })
-      .subscribe({
-        next: (response) => {
-          localStorage.setItem('token', response.token);
-          this.feedback.set({
-            type: 'success',
-            text: response.message || 'Login realizado com sucesso.',
-          });
-          this.loading.set(false);
-          window.setTimeout(() => void this.router.navigate(['/home']), 700);
-        },
-        error: (error: HttpErrorResponse) => {
-          this.feedback.set({
-            type: 'error',
-            text: this.errorMessage(error),
-          });
-          this.loading.set(false);
-        },
-      });
+    this.auth.login(this.username(), this.password()).subscribe({
+      next: (response) => {
+        this.feedback.set({
+          type: 'success',
+          text: response.message || 'Login realizado com sucesso.',
+        });
+        this.loading.set(false);
+        const redirectTo = this.route.snapshot.queryParamMap.get('redirectTo') || '/home';
+        window.setTimeout(() => void this.router.navigateByUrl(redirectTo), 700);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.feedback.set({
+          type: 'error',
+          text: this.errorMessage(error),
+        });
+        this.loading.set(false);
+      },
+    });
   }
 
   /**

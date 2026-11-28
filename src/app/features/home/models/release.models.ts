@@ -43,7 +43,7 @@ export interface ReleasePackage {
   sg_setor: string;
   ticket: string;
   ticket_bug: string | null;
-  sn_mergeado: YesNo;
+  sn_aprovado_code_review: YesNo;
   sn_aprovado_gerente: YesNo;
   sn_aplicado: YesNo;
 }
@@ -55,7 +55,7 @@ export interface PackageFilters {
   versao_correcao: string;
   sn_aplicado: '' | YesNo;
   sn_aprovado_gerente: '' | YesNo;
-  sn_mergeado: '' | YesNo;
+  sn_aprovado_code_review: '' | YesNo;
   ticket_bug: string;
   id_setor: '' | number;
 }
@@ -154,6 +154,17 @@ export interface TipoPacote {
   id: number;
   nm_tipo: string;
   nm_grupo: string;
+}
+
+export interface LogOperacao {
+  id: number;
+  dt_operacao: string;
+  id_usuario: number;
+  nm_usuario: string;
+  nm_entidade: string;
+  id_entidade: number;
+  ds_acao: string;
+  ds_detalhe: string;
 }
 
 export interface CreatePackage {

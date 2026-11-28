@@ -253,7 +253,7 @@ export class HomeComponent implements OnInit {
         versao_correcao: filters.versao_correcao || null,
         sn_aplicado: filters.sn_aplicado || null,
         sn_aprovado_gerente: filters.sn_aprovado_gerente || null,
-        sn_mergeado: filters.sn_mergeado || null,
+        sn_aprovado_code_review: filters.sn_aprovado_code_review || null,
         ticket_bug: filters.ticket_bug || null,
         id_setor: filters.id_setor || null,
       },
@@ -270,7 +270,7 @@ export class HomeComponent implements OnInit {
       versao_correcao: params.get('versao_correcao')?.trim() ?? '',
       sn_aplicado: this.readYesNo(params.get('sn_aplicado')),
       sn_aprovado_gerente: this.readYesNo(params.get('sn_aprovado_gerente')),
-      sn_mergeado: this.readYesNo(params.get('sn_mergeado')),
+      sn_aprovado_code_review: this.readYesNo(params.get('sn_aprovado_code_review')),
       ticket_bug: params.get('ticket_bug')?.trim() ?? '',
       id_setor: this.readPositiveInteger(params.get('id_setor')),
     };
@@ -290,7 +290,7 @@ export class HomeComponent implements OnInit {
       versao_correcao: '',
       sn_aplicado: '',
       sn_aprovado_gerente: '',
-      sn_mergeado: '',
+      sn_aprovado_code_review: '',
       ticket_bug: '',
       id_setor: '',
     };

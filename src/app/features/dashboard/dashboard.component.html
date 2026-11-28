@@ -1,0 +1,41 @@
+<div class="home-shell">
+  <app-header [user]="loggedUser()" />
+  <div class="workspace">
+    <app-main-nav active="dashboard" [user]="loggedUser()" />
+    <main class="content" [attr.aria-busy]="loading()">
+      <div class="breadcrumb"><b>Dashboard</b></div>
+      <section class="page-heading">
+        <div>
+          <h1>Dashboard</h1>
+          <p>Indicadores gerais de pacotes e correções, para acompanhamento e tomada de decisão.</p>
+        </div>
+      </section>
+      @if (loading()) {
+        <div class="feedback" role="status">Carregando indicadores...</div>
+      } @else if (error()) {
+        <div class="feedback feedback--error" role="alert">{{ error() }} <button type="button" (click)="load()">Tentar novamente</button></div>
+      } @else if (data(); as d) {
+        <div class="metrics">
+          <article class="metric--review"><small>Aguardando code review</small><strong>{{ d.kpis.aguardandoCodeReview }}</strong></article>
+          <article class="metric--manager"><small>Aguardando aprovação do GP</small><strong>{{ d.kpis.aguardandoGerente }}</strong></article>
+          <article class="metric--pending"><small>Aguardando aplicação</small><strong>{{ d.kpis.aguardandoAplicacao }}</strong></article>
+          <article class="metric--applied"><small>Aplicados</small><strong>{{ d.kpis.aplicados }}</strong></article>
+        </div>
+        <div class="dashboard-grid">
+          <section class="detail-panel" aria-label="Correções por produto">
+            <h2>Correções por produto</h2>
+            <app-ranked-bars [items]="d.porProduto" emptyMessage="Nenhuma correção cadastrada." />
+          </section>
+          <section class="detail-panel" aria-label="Correções por setor">
+            <h2>Correções por setor</h2>
+            <app-ranked-bars [items]="d.porSetor" emptyMessage="Nenhuma correção cadastrada." />
+          </section>
+          <section class="detail-panel detail-panel--wide" aria-label="Aprovações do GP pendentes por responsável">
+            <h2>Aprovações do GP pendentes por responsável</h2>
+            <app-ranked-bars [items]="d.pendentesPorGerente" emptyMessage="Nenhuma aprovação pendente." />
+          </section>
+        </div>
+      }
+    </main>
+  </div>
+</div>

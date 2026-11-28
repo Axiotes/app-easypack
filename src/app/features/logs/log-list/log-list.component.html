@@ -1,0 +1,78 @@
+<div class="home-shell">
+  <app-header [user]="loggedUser()" />
+  <div class="workspace">
+    <app-main-nav active="logs" [user]="loggedUser()" />
+    <main class="content" [attr.aria-busy]="loading()">
+      <div class="breadcrumb">
+        Início <svg lucideChevronRight size="12" class="breadcrumb-icon" aria-hidden="true"></svg> <b>Histórico de operações</b>
+      </div>
+      <section class="page-heading">
+        <div>
+          <h1>Histórico de operações</h1>
+          <p>Registro das principais operações realizadas no sistema, para acompanhamento e rastreabilidade.</p>
+        </div>
+      </section>
+      @if (loading()) {
+        <div class="feedback" role="status">Carregando histórico...</div>
+      } @else if (error()) {
+        <div class="feedback feedback--error" role="alert">{{ error() }} <button type="button" (click)="load()">Tentar novamente</button></div>
+      } @else {
+        <div class="filters">
+          <label class="filter"
+            ><span>Entidade</span>
+            <select [ngModel]="entidadeFiltro()" (ngModelChange)="entidadeFiltro.set($event)">
+              <option value="">Todas</option>
+              @for (entidade of entidadesDisponiveis(); track entidade) { <option [value]="entidade">{{ entidade }}</option> }
+            </select></label
+          >
+          <label class="filter"
+            ><span>Ação</span>
+            <select [ngModel]="acaoFiltro()" (ngModelChange)="acaoFiltro.set($event)">
+              <option value="">Todas</option>
+              @for (acao of acoesDisponiveis(); track acao) { <option [value]="acao">{{ acao }}</option> }
+            </select></label
+          >
+          <label class="filter filter--wide"
+            ><span>Buscar</span>
+            <input [ngModel]="textoFiltro()" (ngModelChange)="textoFiltro.set($event)" placeholder="Usuário ou descrição" /></label
+          >
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <colgroup>
+              <col style="width: 16%" />
+              <col style="width: 14%" />
+              <col style="width: 12%" />
+              <col style="width: 14%" />
+              <col style="width: 44%" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Data/hora</th>
+                <th>Usuário</th>
+                <th>Entidade</th>
+                <th>Ação</th>
+                <th>Detalhe</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (log of logsFiltrados(); track log.id) {
+                <tr>
+                  <td>{{ formatarData(log.dt_operacao) }}</td>
+                  <td>{{ log.nm_usuario }}</td>
+                  <td>{{ log.nm_entidade }} #{{ log.id_entidade }}</td>
+                  <td>{{ log.ds_acao }}</td>
+                  <td>{{ log.ds_detalhe }}</td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="5" class="empty">Nenhuma operação encontrada.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </main>
+  </div>
+</div>

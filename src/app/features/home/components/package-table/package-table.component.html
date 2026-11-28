@@ -6,7 +6,7 @@
         <th>Produto</th>
         <th>Setor</th>
         <th>Ticket / bug</th>
-        <th>Merge</th>
+        <th>Code review</th>
         <th>Aprovação GP</th>
         <th>Aplicação</th>
       </tr>
@@ -33,7 +33,12 @@
             }
           </td>
           <td>
-            <span class="status" [class.status--yes]="item.sn_mergeado === 'S'">@if (item.sn_mergeado === 'S') { <svg lucideCheck size="10" aria-hidden="true"></svg> } @else { <svg lucideMinus size="10" aria-hidden="true"></svg> } {{ label(item.sn_mergeado, 'Mergeado', 'Não mergeado') }}</span>
+            <span
+              class="status"
+              [class.status--yes]="item.sn_aprovado_code_review === 'S'"
+              [class.status--pending]="item.sn_aprovado_code_review === 'N'"
+              >@if (item.sn_aprovado_code_review === 'S') { <svg lucideCheck size="10" aria-hidden="true"></svg> } @else { <svg lucideClock size="10" aria-hidden="true"></svg> } {{ label(item.sn_aprovado_code_review, 'Aprovado', 'Não aprovado') }}</span
+            >
           </td>
           <td>
             <span

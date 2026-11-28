@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map, shareReplay, switchMap } from 'rxjs';
 import { Client, ClienteCreate, ClienteUpdate, Setor } from '../models/release.models';
-import { authHeaders } from './auth-headers';
 import { ReferenceDataService } from './reference-data.service';
 
 interface ClienteRaw {
@@ -20,7 +19,7 @@ export class ClientService {
   private clients$?: Observable<Client[]>;
 
   getById(id: number): Observable<Client> {
-    return this.http.get<ClienteRaw>(`${this.url}/${id}`, { headers: authHeaders() }).pipe(
+    return this.http.get<ClienteRaw>(`${this.url}/${id}`).pipe(
       switchMap((raw) =>
         this.referenceData.getSetores().pipe(map((setores) => this.toClient(raw, setores))),
       ),
@@ -44,7 +43,7 @@ export class ClientService {
   }
 
   create(data: ClienteCreate): Observable<Client> {
-    return this.http.post<ClienteRaw>(this.url, data, { headers: authHeaders() }).pipe(
+    return this.http.post<ClienteRaw>(this.url, data).pipe(
       switchMap((raw) => this.referenceData.getSetores().pipe(map((setores) => this.toClient(raw, setores)))),
       map((client) => {
         this.invalidate();
@@ -54,7 +53,7 @@ export class ClientService {
   }
 
   update(id: number, data: ClienteUpdate): Observable<Client> {
-    return this.http.put<ClienteRaw>(`${this.url}/${id}`, data, { headers: authHeaders() }).pipe(
+    return this.http.put<ClienteRaw>(`${this.url}/${id}`, data).pipe(
       switchMap((raw) => this.referenceData.getSetores().pipe(map((setores) => this.toClient(raw, setores)))),
       map((client) => {
         this.invalidate();
@@ -64,7 +63,7 @@ export class ClientService {
   }
 
   remove(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.url}/${id}`, { headers: authHeaders() }).pipe(
+    return this.http.delete<void>(`${this.url}/${id}`).pipe(
       map(() => this.invalidate()),
     );
   }
@@ -74,7 +73,7 @@ export class ClientService {
   }
 
   private allClients(): Observable<Client[]> {
-    this.clients$ ??= this.http.get<ClienteRaw[]>(this.url, { headers: authHeaders() }).pipe(
+    this.clients$ ??= this.http.get<ClienteRaw[]>(this.url).pipe(
       switchMap((raw) =>
         this.referenceData
           .getSetores()

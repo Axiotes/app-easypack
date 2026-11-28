@@ -1,17 +1,16 @@
-import { LucideBell, LucideChevronDown, LucideLogOut, LucideCheck } from '@lucide/angular';
-import { Component, Input, OnChanges, SimpleChanges, inject, signal, computed } from '@angular/core';
-import { Router } from '@angular/router';
+import { LucideBell, LucideCheck, LucideChevronDown, LucideLogOut } from '@lucide/angular';
+import { Component, Input, OnChanges, SimpleChanges, computed, inject, signal } from '@angular/core';
+import { AuthService } from '../../../../core/auth/auth.service';
 import { BrandComponent } from '../../../../shared/components/brand/brand.component';
-import { LoggedUser } from '../../models/release.models';
 import { Notification } from '../../models/notification.models';
+import { LoggedUser } from '../../models/release.models';
 import { NotificationService } from '../../services/notification.service';
 
 @Component({ selector: 'app-header', standalone: true, imports: [LucideBell, LucideCheck, LucideChevronDown, LucideLogOut, BrandComponent], templateUrl: './app-header.component.html', styleUrl: './app-header.component.scss' })
 export class AppHeaderComponent implements OnChanges {
   @Input() user: LoggedUser | null = null;
-  @Input() clientId: number | null = null;
 
-  private readonly router = inject(Router);
+  private readonly auth = inject(AuthService);
   private readonly notificationService = inject(NotificationService);
   protected readonly notifications = signal<Notification[]>([]);
   protected readonly notificationOpen = signal(false);
@@ -20,9 +19,11 @@ export class AppHeaderComponent implements OnChanges {
   protected readonly markingRead = signal<number | null>(null);
   protected readonly unreadCount = computed(() => this.notifications().filter((item) => !item.lida).length);
 
+  // Notificação é por usuário logado (Notificacao.id_usuario no backend), não por
+  // cliente selecionado — por isso dispara sempre que o usuário muda, em qualquer tela.
   ngOnChanges(changes: SimpleChanges): void {
-    if ((changes['user'] || changes['clientId']) && this.user && this.clientId !== null) this.loadNotifications();
-    if (changes['user'] && !this.user || changes['clientId'] && this.clientId === null) this.notifications.set([]);
+    if (changes['user'] && this.user) this.loadNotifications();
+    else if (changes['user'] && !this.user) this.notifications.set([]);
   }
 
   protected toggleNotifications(): void {
@@ -31,10 +32,10 @@ export class AppHeaderComponent implements OnChanges {
   }
 
   protected loadNotifications(): void {
-    if (this.clientId === null) return;
+    if (!this.user) return;
     this.notificationLoading.set(true);
     this.notificationError.set(false);
-    this.notificationService.list(this.clientId).subscribe({
+    this.notificationService.list(this.user.id).subscribe({
       next: (items) => { this.notifications.set(items); this.notificationLoading.set(false); },
       error: () => { this.notificationError.set(true); this.notificationLoading.set(false); },
     });
@@ -66,7 +67,6 @@ export class AppHeaderComponent implements OnChanges {
   }
 
   protected logout(): void {
-    localStorage.removeItem('token');
-    void this.router.navigate(['/login']);
+    this.auth.logout();
   }
 }
