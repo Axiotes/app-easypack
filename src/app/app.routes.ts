@@ -17,5 +17,6 @@ export const routes: Routes = [
   { path: 'clientes', loadComponent: () => import('./features/clientes/cliente-list/cliente-list.component').then((m) => m.ClienteListComponent), title: 'Gestão de clientes | EasyPack', canActivate: [authGuard] },
   { path: 'clientes/novo', loadComponent: () => import('./features/clientes/cliente-form/cliente-form.component').then((m) => m.ClienteFormComponent), title: 'Novo cliente | EasyPack', canActivate: [authGuard] },
   { path: 'clientes/:id/editar', loadComponent: () => import('./features/clientes/cliente-form/cliente-form.component').then((m) => m.ClienteFormComponent), title: 'Editar cliente | EasyPack', canActivate: [authGuard] },
+  { path: 'logs', loadComponent: () => import('./features/logs/log-list/log-list.component').then((m) => m.LogListComponent), title: 'Histórico de operações | EasyPack', canActivate: [authGuard] },
   { path: '**', redirectTo: 'login' }
 ];

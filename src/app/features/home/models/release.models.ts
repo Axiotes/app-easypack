@@ -156,6 +156,17 @@ export interface TipoPacote {
   nm_grupo: string;
 }
 
+export interface LogOperacao {
+  id: number;
+  dt_operacao: string;
+  id_usuario: number;
+  nm_usuario: string;
+  nm_entidade: string;
+  id_entidade: number;
+  ds_acao: string;
+  ds_detalhe: string;
+}
+
 export interface CreatePackage {
   tp_pacote: number;
   nm_pacote: string;

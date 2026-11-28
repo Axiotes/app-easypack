@@ -12,4 +12,9 @@
       ><svg lucideUserCog size="14" aria-hidden="true"></svg><span>Usuários</span></a
     >
   }
+  @if (canViewLogs()) {
+    <a [class.active]="active === 'logs'" routerLink="/logs"
+      ><svg lucideHistory size="14" aria-hidden="true"></svg><span>Histórico</span></a
+    >
+  }
 </nav>
